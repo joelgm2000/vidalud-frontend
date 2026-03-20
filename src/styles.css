@@ -1,1 +1,20 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  --vidalud-dark: #0b986a;
+  --vidalud-mid: #32ae7e;
+  --vidalud-soft: #f2ffff;
+}
+
+body { background-color: var(--vidalud-soft); font-family: 'Inter', sans-serif; overflow-x: hidden; }
+.text-vidalud { color: var(--vidalud-dark) !important; }
+.bg-vidalud { background-color: var(--vidalud-dark) !important; }
+.italic { font-style: italic; }
+
+/* Estilo de Islas de Características */
+.island-card {
+  border-left: 6px solid var(--vidalud-dark) !important;
+  border-radius: 12px !important;
+  background: white;
+  padding: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  margin-bottom: 12px;
+}

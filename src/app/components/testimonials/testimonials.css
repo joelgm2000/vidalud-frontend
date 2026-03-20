@@ -1,0 +1,64 @@
+/* Contenedor del video - ALTURA LIMITADA */
+.test-card__video {
+  position: relative;
+  overflow: hidden;
+  background-color: black;
+  height: 420px; /* <--- Esto es lo que evita que se vean gigantes */
+}
+
+.test-card__video video {
+  width: 100% !important;
+  height: 100% !important; /* <--- Ocupa exacto los 420px */
+  object-fit: contain !important; /* Muestra el video completo sin recortar */
+  display: block;
+}
+
+/* Botón de Play (Capa oscura) */
+.test-card__play-btn {
+  background: rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.test-card__play-btn:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+/* El Círculo Verde del Play */
+.play-icon-circle {
+  width: 65px;
+  height: 65px;
+  background-color: #0b986a; /* Verde Vidalud */
+  border-radius: 50%;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.test-card__play-btn:hover .play-icon-circle {
+  transform: scale(1.15);
+  background-color: #09855c;
+}
+
+/* Ocultar botón al reproducir */
+.test-card.playing .test-card__play-btn {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Tarjeta Animaciones */
+.test-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.test-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(11, 152, 106, 0.15) !important;
+}
+
+/* Efecto de elevación para el botón de descarga */
+.hover-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(11, 152, 106, 0.3) !important;
+}

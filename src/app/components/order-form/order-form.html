@@ -1,0 +1,166 @@
+<div class="container-fluid px-0">
+  <div class="row g-0">
+    
+    <div class="col-lg-7 p-4 bg-white">
+      <h4 class="fw-bold mb-3">Datos de Envío</h4>
+      
+      <form [formGroup]="form">
+
+        <!-- ✅ NOMBRES y APELLIDOS separados -->
+        <div class="row g-2 mb-3">
+          <div class="col-6">
+            <div class="form-floating">
+              <input type="text" class="form-control" id="firstName" formControlName="firstName" placeholder="Nombres" [class.is-invalid]="isInvalid('firstName')">
+              <label for="firstName">Nombres</label>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-floating">
+              <input type="text" class="form-control" id="lastName" formControlName="lastName" placeholder="Apellidos" [class.is-invalid]="isInvalid('lastName')">
+              <label for="lastName">Apellidos</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-2 mb-3">
+          <div class="col-6">
+            <div class="form-floating">
+              <input type="tel" class="form-control" id="phone" formControlName="phone" placeholder="Celular" [class.is-invalid]="isInvalid('phone')">
+              <label for="phone">Celular</label>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-floating">
+              <input type="email" class="form-control" id="email" formControlName="email" placeholder="Email" [class.is-invalid]="isInvalid('email')">
+              <label for="email">Email</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- ✅ Confirmar Email -->
+        <div class="form-floating mb-3">
+          <input type="email" class="form-control" id="emailConfirm" formControlName="emailConfirm" placeholder="Confirmar Email" [class.is-invalid]="isInvalid('emailConfirm') || form.hasError('emailMismatch')">
+          <label for="emailConfirm">Confirmar Email</label>
+          <div class="invalid-feedback" *ngIf="form.hasError('emailMismatch')">
+            Los emails no coinciden
+          </div>
+        </div>
+
+        <div class="row g-2 mb-3">
+          <div class="col-6">
+            <div class="form-floating">
+              <select class="form-select" formControlName="department" id="dep" [class.is-invalid]="isInvalid('department')">
+                <option value="">Departamento</option>
+                <option *ngFor="let d of departments" [value]="d">{{ d }}</option>
+              </select>
+              <label for="dep">Departamento</label>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-floating">
+              <select class="form-select" formControlName="city" id="city" [class.is-invalid]="isInvalid('city')">
+                <option value="">Ciudad</option>
+                <option *ngFor="let c of availableCities" [value]="c">{{ c }}</option>
+              </select>
+              <label for="city">Ciudad</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- ✅ Dirección y Barrio separados -->
+        <div class="form-floating mb-3">
+          <input type="text" class="form-control" id="address" formControlName="address" placeholder="Dirección" [class.is-invalid]="isInvalid('address')">
+          <label for="address">Dirección (Ej: CRA 17 # 11-25, Apto 301)</label>
+        </div>
+
+        <div class="form-floating mb-4">
+          <input type="text" class="form-control" id="neighborhood" formControlName="neighborhood" placeholder="Barrio" [class.is-invalid]="isInvalid('neighborhood')">
+          <label for="neighborhood">Barrio</label>
+        </div>
+
+        <h5 class="fw-bold mb-3">Tu Pedido</h5>
+        <div class="d-flex justify-content-between align-items-center mb-4 p-3 border rounded bg-light">
+          <div>
+            <div class="fw-bold">Cantidad de Promos (2x1)</div>
+            <small class="text-muted">Aprovecha el envío gratis</small>
+          </div>
+          <div class="input-group" style="width: 120px;">
+            <button type="button" class="btn btn-outline-secondary" (click)="changeQuantity(-1)">-</button>
+            <input type="text" class="form-control text-center fw-bold bg-white" [value]="quantity" readonly>
+            <button type="button" class="btn btn-outline-secondary" (click)="changeQuantity(1)">+</button>
+          </div>
+        </div>
+
+        <h5 class="fw-bold mb-3">Método de Pago</h5>
+        <div class="d-grid gap-2 mb-4">
+          <label class="payment-option d-flex align-items-center p-3 border rounded cursor-pointer selected-pay">
+            <input type="radio" class="form-check-input me-3" value="cod" checked disabled>
+            <div>
+              <div class="fw-bold">Pago Contra Entrega</div>
+              <small class="text-muted">Pagas en efectivo al recibir.</small>
+            </div>
+            <i class="bi bi-cash ms-auto fs-4 text-success"></i>
+          </label>
+        </div>
+
+        <button type="button" class="btn btn-success w-100 py-3 fw-bold" (click)="openConfirmModal()">
+          FINALIZAR PEDIDO
+        </button>
+
+      </form>
+    </div>
+
+    <div class="col-lg-5 bg-light p-4 border-start">
+      <h5 class="fw-bold mb-3">Resumen</h5>
+      <div class="d-flex gap-3 align-items-center mb-3">
+        <img src="IMAGEN_PRODUCTO_3.jpeg" width="60" class="rounded border bg-white">
+        <div>
+          <div class="fw-bold">Magnesium Complex <span class="badge bg-danger ms-1">PROMO 2x1</span></div>
+          <small class="text-muted">Recibes 2 frascos <span class="badge bg-secondary ms-1">x{{ quantity }}</span></small>
+        </div>
+        <div class="ms-auto fw-bold text-dark">${{ 99900 | number:'1.0-0' }}</div>
+      </div>
+      <hr>
+      <div class="d-flex justify-content-between fw-bold fs-5">
+        <span>Total</span>
+        <span class="text-success">${{ total | number:'1.0-0' }}</span>
+      </div>
+      <div class="text-end mt-1">
+        <small class="text-muted">Envío gratis incluido</small>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Modal confirmación -->
+<div class="modal fade" id="confirmDataModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 rounded-4 shadow">
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title fw-bold text-dark"><i class="bi bi-check-circle-fill text-success me-2"></i>Verifica tus datos</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-4">
+        <p class="text-muted mb-3" style="font-size: 0.9rem;">
+          Confirma que tu dirección y celular estén correctos para asegurar la entrega:
+        </p>
+        <div class="bg-light p-3 rounded-3 mb-4" style="font-size: 0.9rem;">
+          <div class="mb-2"><strong>Nombre:</strong> <span class="text-muted">{{ form.get('firstName')?.value }} {{ form.get('lastName')?.value }}</span></div>
+          <div class="mb-2"><strong>Celular:</strong> <span class="text-muted">{{ form.get('phone')?.value }}</span></div>
+          <div class="mb-2"><strong>Email:</strong> <span class="text-muted">{{ form.get('email')?.value }}</span></div>
+          <div class="mb-2"><strong>Dirección:</strong> <span class="text-muted">{{ form.get('address')?.value }}</span></div>
+          <div class="mb-2"><strong>Barrio:</strong> <span class="text-muted">{{ form.get('neighborhood')?.value }}</span></div>
+          <div><strong>Ciudad:</strong> <span class="text-muted">{{ form.get('city')?.value }}, {{ form.get('department')?.value }}</span></div>
+        </div>
+        <div class="d-flex gap-2">
+          <button type="button" class="btn btn-outline-secondary w-50 fw-bold" data-bs-dismiss="modal">Corregir</button>
+          <button type="button" class="btn btn-success w-50 fw-bold shadow-sm" (click)="submitOrder()" [disabled]="loading()">
+            <span *ngIf="loading()">Procesando...</span>
+            <span *ngIf="!loading()">Sí, es correcto</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

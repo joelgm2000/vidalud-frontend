@@ -1,0 +1,15 @@
+.island-card {
+  border-bottom: 3px solid #0b986a !important; /* Borde abajo en vez de al lado para ahorrar espacio */
+  border-radius: 12px;
+  transition: transform 0.2s;
+}
+
+.island-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1) !important;
+}
+
+/* Iconos centrados y bonitos */
+i {
+  display: block;
+}

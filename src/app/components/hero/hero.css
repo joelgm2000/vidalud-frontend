@@ -1,0 +1,85 @@
+.hero-full-screen {
+  min-height: 87vh;
+  background-color: #f8fcfb;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* --- ALTURA MAESTRA INTELIGENTE --- */
+.master-height {
+  min-height: 480px; 
+  height: auto;
+  width: 100%;
+}
+
+@media (min-width: 992px) {
+  .master-height {
+    height: 480px; 
+  }
+}
+
+.mute-btn {
+  position: absolute;
+  bottom: 28px;
+  right: 8px;
+  background: rgba(0,0,0,0.45);
+  border: none;
+  color: white;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: background 0.2s;
+}
+.mute-btn:hover { background: rgba(0,0,0,0.7); }
+
+.main-img-contain {
+  width: 100%; height: 100%; object-fit: contain; padding: 15px;
+}
+
+/* --- VIDEO --- */
+.vertical-video-full {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+}
+
+/* --- MINIATURAS --- */
+.thumb-small {
+  width: 70px; height: 70px; 
+  object-fit: cover; border-radius: 8px; border: 2px solid transparent; transition: .2s;
+}
+.active-thumb { border-color: #0b986a; transform: scale(1.05); }
+
+/* --- BOTÓN PULSANTE --- */
+.pulse-button {
+  background-color: #0b986a !important; border: none; font-size: 1rem;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(11, 152, 106, 0.7); }
+  70% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(11, 152, 106, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(11, 152, 106, 0); }
+}
+
+.modal-content { background-color: #f2ffff; }
+
+/* --- RESPONSIVE PARA CELULARES --- */
+@media (max-width: 991px) {
+  .hero-full-screen { 
+    height: auto; display: block; padding-top: 20px; padding-bottom: 20px; 
+  }
+  
+  /* AQUÍ LA CORRECCIÓN: Altura aumentada a 550px para el celular */
+  .mobile-video-wrapper { 
+    height: 550px !important; 
+    width: 100%; 
+    border-left: none !important; 
+    border-bottom: 1px solid #eee;
+  }
+}

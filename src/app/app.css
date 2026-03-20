@@ -1,0 +1,129 @@
+/* =============================================
+   VIDALUD — Design Tokens + Bootstrap Overrides
+   IMPORTANTE: en angular.json, styles[] debe tener:
+     "node_modules/bootstrap/dist/css/bootstrap.min.css"
+   ANTES que "src/styles.css"
+   Y en scripts[]:
+     "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+   ============================================= */
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
+
+:root {
+  --vl-primary:     #1B3F2E;
+  --vl-primary-lt:  #2A5F44;
+  --vl-accent:      #E8C547;
+  --vl-accent-dark: #C9A92E;
+  --vl-dark:        #0D1F18;
+  --vl-surface:     #F5F2EC;
+  --vl-surface-alt: #EAE5D8;
+  --vl-muted:       #6B7B6F;
+}
+
+/* ── Tipografía global ────────── */
+body {
+  font-family: 'DM Sans', sans-serif;
+  background-color: var(--vl-surface);
+  color: #1A1A1A;
+}
+
+h1, h2, h3, h4, h5, .display-font {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+/* ── Botón principal amarillo ─── */
+.btn-vidalud {
+  background-color: var(--vl-accent);
+  color: var(--vl-dark);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 1.2rem;
+  letter-spacing: .5px;
+  border: none;
+  border-radius: 999px;
+  padding: .75rem 2rem;
+  transition: transform .18s, box-shadow .18s, background .18s;
+  box-shadow: 0 6px 20px rgba(232,197,71,.35);
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+}
+.btn-vidalud:hover, .btn-vidalud:focus {
+  background-color: var(--vl-accent-dark);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(232,197,71,.45);
+  color: var(--vl-dark);
+}
+
+/* ── Botón secundario verde ───── */
+.btn-vidalud-dark {
+  background-color: var(--vl-primary);
+  color: #fff;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 1.25rem;
+  border: none;
+  border-radius: 999px;
+  padding: .8rem 2rem;
+  transition: transform .18s, box-shadow .18s, background .18s;
+  box-shadow: 0 6px 20px rgba(27,63,46,.25);
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+}
+.btn-vidalud-dark:hover, .btn-vidalud-dark:focus {
+  background-color: var(--vl-primary-lt);
+  transform: translateY(-2px);
+  color: #fff;
+}
+
+/* ── Badge de marca ───────────── */
+.badge-vidalud {
+  background: var(--vl-accent);
+  color: var(--vl-dark);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: .78rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 4px 16px;
+  border-radius: 999px;
+  display: inline-block;
+}
+
+/* ── Colores de fondo utilitarios ─ */
+.bg-vl-dark    { background-color: var(--vl-dark)    !important; }
+.bg-vl-primary { background-color: var(--vl-primary) !important; }
+.bg-vl-surface { background-color: var(--vl-surface-alt) !important; }
+.bg-vl-white   { background-color: #fff !important; }
+
+/* ── Colores de texto utilitarios ─ */
+.text-vl-accent  { color: var(--vl-accent)   !important; }
+.text-vl-primary { color: var(--vl-primary)  !important; }
+.text-vl-muted   { color: var(--vl-muted)    !important; }
+
+/* ── Sombras ──────────────────── */
+.shadow-vl       { box-shadow: 0 8px 32px rgba(27,63,46,.13) !important; }
+.shadow-vl-heavy { box-shadow: 0 20px 60px rgba(13,31,24,.22) !important; }
+
+/* ── Spinner de carga ─────────── */
+.vl-spinner {
+  display: inline-block;
+  width: 22px; height: 22px;
+  border: 3px solid rgba(255,255,255,.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: vl-spin .7s linear infinite;
+}
+@keyframes vl-spin { to { transform: rotate(360deg); } }
+
+/* ── Footer ───────────────────── */
+.vl-footer-logo {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900;
+  font-size: 2.2rem;
+  letter-spacing: 2px;
+  color: #fff;
+}
+.vl-footer-logo em { color: var(--vl-accent); font-style: normal; }

@@ -1,0 +1,26 @@
+/* Floating Labels más limpios */
+.form-floating > .form-control:focus, 
+.form-floating > .form-control:not(:placeholder-shown) {
+  padding-top: 1.625rem;
+  padding-bottom: 0.625rem;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: #0b986a;
+  box-shadow: 0 0 0 0.25rem rgba(11, 152, 106, 0.15);
+}
+
+/* Selección de Pago */
+.payment-option {
+  background-color: white;
+  transition: all 0.2s;
+}
+.payment-option:hover {
+  background-color: #f8fcfb;
+  border-color: #0b986a;
+}
+.selected-pay {
+  background-color: #f2ffff;
+  border-color: #0b986a !important;
+  box-shadow: 0 0 0 1px #0b986a;
+}
