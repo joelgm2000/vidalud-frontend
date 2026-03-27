@@ -6,7 +6,6 @@
       
       <form [formGroup]="form">
 
-        <!-- ✅ NOMBRES y APELLIDOS separados -->
         <div class="row g-2 mb-3">
           <div class="col-6">
             <div class="form-floating">
@@ -37,13 +36,18 @@
           </div>
         </div>
 
-        <!-- ✅ Confirmar Email -->
-        <div class="form-floating mb-3">
+        <div class="form-floating mb-2">
           <input type="email" class="form-control" id="emailConfirm" formControlName="emailConfirm" placeholder="Confirmar Email" [class.is-invalid]="isInvalid('emailConfirm') || form.hasError('emailMismatch')">
           <label for="emailConfirm">Confirmar Email</label>
           <div class="invalid-feedback" *ngIf="form.hasError('emailMismatch')">
             Los emails no coinciden
           </div>
+        </div>
+
+        <div class="mb-4 px-1">
+          <span class="text-danger d-block fw-bold" style="font-size: 0.85rem; line-height: 1.25;">
+            <i class="bi bi-exclamation-circle-fill me-1"></i> ¡Asegúrate de escribir correctamente tu celular y correo para poder contactarte con la confirmación de tu pedido!
+          </span>
         </div>
 
         <div class="row g-2 mb-3">
@@ -67,7 +71,6 @@
           </div>
         </div>
 
-        <!-- ✅ Dirección y Barrio separados -->
         <div class="form-floating mb-3">
           <input type="text" class="form-control" id="address" formControlName="address" placeholder="Dirección" [class.is-invalid]="isInvalid('address')">
           <label for="address">Dirección (Ej: CRA 17 # 11-25, Apto 301)</label>
@@ -133,7 +136,6 @@
   </div>
 </div>
 
-<!-- Modal confirmación -->
 <div class="modal fade" id="confirmDataModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content border-0 rounded-4 shadow">
@@ -145,7 +147,8 @@
         <p class="text-muted mb-3" style="font-size: 0.9rem;">
           Confirma que tu dirección y celular estén correctos para asegurar la entrega:
         </p>
-        <div class="bg-light p-3 rounded-3 mb-4" style="font-size: 0.9rem;">
+        
+        <div class="bg-light p-3 rounded-3 mb-3" style="font-size: 0.9rem;">
           <div class="mb-2"><strong>Nombre:</strong> <span class="text-muted">{{ form.get('firstName')?.value }} {{ form.get('lastName')?.value }}</span></div>
           <div class="mb-2"><strong>Celular:</strong> <span class="text-muted">{{ form.get('phone')?.value }}</span></div>
           <div class="mb-2"><strong>Email:</strong> <span class="text-muted">{{ form.get('email')?.value }}</span></div>
@@ -153,6 +156,11 @@
           <div class="mb-2"><strong>Barrio:</strong> <span class="text-muted">{{ form.get('neighborhood')?.value }}</span></div>
           <div><strong>Ciudad:</strong> <span class="text-muted">{{ form.get('city')?.value }}, {{ form.get('department')?.value }}</span></div>
         </div>
+
+        <div class="alert alert-warning border-warning border-start border-4 bg-warning bg-opacity-10 py-2 px-3 mb-4 text-dark shadow-sm" style="font-size: 0.85rem; line-height: 1.4;">
+          <strong>¡Atención!</strong> En el próximo día lo estaremos contactando por correo electrónico o por llamada o vía WhatsApp, <strong>así que confirme que haya escrito bien esta información.</strong>
+        </div>
+
         <div class="d-flex gap-2">
           <button type="button" class="btn btn-outline-secondary w-50 fw-bold" data-bs-dismiss="modal">Corregir</button>
           <button type="button" class="btn btn-success w-50 fw-bold shadow-sm" (click)="submitOrder()" [disabled]="loading()">
