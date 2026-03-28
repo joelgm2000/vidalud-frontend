@@ -114,11 +114,9 @@ export class OrderForm {
   async submitOrder() {
     this.loading.set(true);
 
-    // ✅ Combinamos dirección + barrio para la columna "DIRECCIÓN Y BARRIO" de Dropi
     const fullAddress = `${this.form.value.address}, ${this.form.value.neighborhood}`;
 
     const payload: OrderPayload = {
-      // ✅ fullName sigue existiendo en OrderPayload para el email
       fullName:      `${this.form.value.firstName} ${this.form.value.lastName}`,
       firstName:     this.form.value.firstName,
       lastName:      this.form.value.lastName,
@@ -144,16 +142,31 @@ export class OrderForm {
     } catch (err) {
       console.error('Error en checkout:', err);
       alert('Hubo un problema guardando tu pedido. Por favor intenta nuevamente.');
-    } finally {
-      this.loading.set(false);
+      this.loading.set(false); // Solo detenemos el loading si hay error
     }
   }
 
   private handleSuccess(orderId: string) {
+    // 1. Extraemos los datos necesarios antes de limpiar el formulario
+    const firstName = this.form.value.firstName;
+    const lastName = this.form.value.lastName;
+    const city = this.form.value.city;
+
+    // 2. Cerramos el modal y limpiamos todo
     this.closeModal();
     this.form.reset();
     this.quantity = 1;
     this.form.get('department')?.setValue('');
+
+    // 3. Redirección automática a WhatsApp
+    const phoneNumber = '573114370406'; // Tu número sin el +
+    const message = `¡Hola! Acabo de realizar un pedido de Magnesium Complex. ⚡\n\n*A nombre de:* ${firstName} ${lastName}\n*Ciudad:* ${city}\n*ID de Orden:* ${orderId || 'Pendiente'}\n\nEscribo para confirmar mi pedido de pago contra entrega.`;
+    
+    // Codificamos el texto para que la URL sea válida
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+
+    // Redirigimos al usuario en la misma ventana (evita bloqueadores de ventanas emergentes en celulares)
+    window.location.href = whatsappUrl;
   }
 
   private closeModal() {
