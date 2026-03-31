@@ -60,7 +60,7 @@
 
           <div class="col-12 col-lg-5 h-100 border-start mobile-video-wrapper">
             <div class="h-100 position-relative bg-black w-100">
-              <video #heroVideo autoplay muted loop playsinline preload="metadata" class="vertical-video-full">
+              <video #heroVideo autoplay muted loop playsinline preload="metadata" class="vertical-video-full" (click)="toggleMute()" style="cursor: pointer;">
                 <source src="VIDEO PRODUCTO 3.MP4" type="video/mp4">
               </video>
               <button class="mute-btn" (click)="toggleMute()">
