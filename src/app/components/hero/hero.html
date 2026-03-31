@@ -4,7 +4,7 @@
     
     <div class="col-12 col-lg-6">
       <div class="master-height shadow-sm rounded-4 bg-white border d-flex align-items-center justify-content-center position-relative overflow-hidden">
-        <img [src]="currentImage" class="main-img-contain" alt="Magnesium Complex Vidalud">
+        <img [src]="currentImage" class="main-img-contain" alt="Magnesium Complex Vidalud" loading="eager">
       </div>
     </div>
 
@@ -60,7 +60,7 @@
 
           <div class="col-12 col-lg-5 h-100 border-start mobile-video-wrapper">
             <div class="h-100 position-relative bg-black w-100">
-              <video #heroVideo autoplay muted loop playsinline class="vertical-video-full">
+              <video #heroVideo autoplay muted loop playsinline preload="metadata" class="vertical-video-full">
                 <source src="VIDEO PRODUCTO 3.MP4" type="video/mp4">
               </video>
               <button class="mute-btn" (click)="toggleMute()">
@@ -84,6 +84,7 @@
         <img *ngFor="let img of images; let i = index" 
              [src]="img" 
              (click)="selectImage(i)"
+             loading="lazy"
              class="img-thumbnail thumb-small cursor-pointer shadow-sm" 
              [class.active-thumb]="currentIndex === i">
       </div>
