@@ -21,7 +21,7 @@ export class Testimonials {
 
   testimonials: Testimonial[] = [
     {
-      videoUrl:  'vidalud-demo.mp4', // Puedes reusar el demo si no tienes otros videos aún
+      videoUrl:  'vidalud-demo.mp4', 
       posterUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&q=80',
       name: 'Camila Torres', city: 'Bogotá, D.C.', stars: 5,
       quote: 'Trabajo todo el día sentada y el dolor de espalda era insoportable. En una semana usando esto noté la diferencia. ¡Súper recomendado!'
@@ -40,20 +40,39 @@ export class Testimonials {
     }
   ];
 
+  // 🔥 Variables para controlar si el texto fue copiado
+  copiedPhone = false;
+  copiedEmail = false;
+
+  // 🔥 Función que se encarga de copiar al portapapeles y mostrar el mensaje temporal
+  copyText(text: string, type: 'phone' | 'email') {
+    navigator.clipboard.writeText(text).then(() => {
+      if (type === 'phone') {
+        this.copiedPhone = true;
+        // Regresar a la normalidad después de 2.5 segundos
+        setTimeout(() => this.copiedPhone = false, 2500); 
+      } else {
+        this.copiedEmail = true;
+        setTimeout(() => this.copiedEmail = false, 2500);
+      }
+    }).catch(err => {
+      console.error('No se pudo copiar el texto: ', err);
+    });
+  }
+
   stars(n: number): number[] { return Array(n).fill(0); }
 
   play(event: Event): void {
     const btn = event.currentTarget as HTMLElement;
-    // Buscamos el contenedor padre .test-card
     const card = btn.closest('.test-card');
     
     if (card) {
       const video = card.querySelector('video') as HTMLVideoElement;
       if (video) {
-        video.muted = false; // Activar sonido al dar play voluntariamente
+        video.muted = false; 
         video.play();
         card.classList.add('playing');
-        video.controls = true; // Mostrar controles nativos al reproducir
+        video.controls = true; 
       }
     }
   }

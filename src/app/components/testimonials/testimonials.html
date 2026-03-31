@@ -8,11 +8,15 @@
       <a href="https://wa.me/573114370406?text=Hola,%20necesito%20ayuda%20con%20mi%20pedido." target="_blank" class="btn btn-success rounded-pill fw-bold shadow-sm d-flex align-items-center">
         <i class="bi bi-whatsapp me-2"></i> WhatsApp
       </a>
-      <a href="tel:+573114370406" class="btn btn-light border-secondary text-dark rounded-pill fw-bold shadow-sm d-flex align-items-center">
-        <i class="bi bi-telephone-fill text-primary me-2"></i> 311 4370406
+      
+      <a style="cursor: pointer;" (click)="copyText('3114370406', 'phone')" class="btn btn-light border-secondary text-dark rounded-pill fw-bold shadow-sm d-flex align-items-center transition-all">
+        <i class="me-2" [ngClass]="copiedPhone ? 'bi bi-check-circle-fill text-success' : 'bi bi-telephone-fill text-primary'"></i> 
+        {{ copiedPhone ? '¡Número copiado!' : '311 4370406' }}
       </a>
-      <a href="mailto:vidaludshop@gmail.com" class="btn btn-light border-secondary text-dark rounded-pill fw-bold shadow-sm d-flex align-items-center">
-        <i class="bi bi-envelope-fill text-danger me-2"></i> vidaludshop@gmail.com
+      
+      <a style="cursor: pointer;" (click)="copyText('vidaludshop@gmail.com', 'email')" class="btn btn-light border-secondary text-dark rounded-pill fw-bold shadow-sm d-flex align-items-center transition-all">
+        <i class="me-2" [ngClass]="copiedEmail ? 'bi bi-check-circle-fill text-success' : 'bi bi-envelope-fill text-danger'"></i> 
+        {{ copiedEmail ? '¡Correo copiado!' : 'vidaludshop@gmail.com' }}
       </a>
     </div>
   </div>
