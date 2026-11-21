@@ -1,0 +1,56 @@
+<section class="final-cta">
+  <div class="wrap final-inner">
+    <div>
+      <span class="eyebrow">Promo 2x1</span>
+      <h2>Empieza hoy a cuidar tu <em>descanso</em></h2>
+      <p>2 frascos de Magnesium Complex por {{ price }}. Envío gratis y pagas al recibir.</p>
+    </div>
+    <button type="button" class="btn-gold btn-lg" (click)="cart.checkout()">
+      Pedir ahora <i class="bi bi-arrow-right"></i>
+    </button>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div class="footer-brand">
+      <img src="LOGO FINAL VIDALUD.png" alt="Vidalud" width="56" height="56" loading="lazy">
+      <p>Suplementos para vivir con más energía y mejor descanso. Envíos a toda Colombia.</p>
+    </div>
+    <div>
+      <h4>Contacto</h4>
+      <ul>
+        <li><a [href]="waUrl" target="_blank" rel="noopener"><i class="bi bi-whatsapp"></i> 311 437 0406</a></li>
+        <li><a href="mailto:vidaludshop@gmail.com"><i class="bi bi-envelope"></i> vidaludshop&#64;gmail.com</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Tu compra</h4>
+      <ul>
+        <li><i class="bi bi-cash-coin"></i> Pago contra entrega</li>
+        <li><i class="bi bi-truck"></i> Envío gratis</li>
+        <li><i class="bi bi-chat-dots"></i> Confirmación por WhatsApp</li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap footer-legal">
+    <p>
+      Magnesium Complex es un suplemento dietario. No es un medicamento y no reemplaza una alimentación balanceada.
+      Si estás embarazada, en lactancia o tomas medicamentos, consulta a tu médico antes de consumirlo.
+    </p>
+    <p class="legal-links">
+      <span>© {{ year }} Vidalud · vidalud.com</span>
+      <button type="button" (click)="legal.show('terms')">Términos y condiciones</button>
+      <button type="button" (click)="legal.show('privacy')">Política de tratamiento de datos</button>
+    </p>
+  </div>
+</footer>
+
+<!-- Barra fija de compra (celular) -->
+<div class="sticky-buy" [class.show]="showSticky() && !cart.isOpen()" aria-hidden="false">
+  <div class="sticky-info">
+    <strong>{{ total() }}</strong>
+    <span>{{ cart.bottles() }} frascos · pagas al recibir</span>
+  </div>
+  <button type="button" class="btn-gold" (click)="cart.checkout()">Pedir ahora</button>
+</div>

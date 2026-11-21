@@ -1,0 +1,118 @@
+<!-- Cómo comprar -->
+<section id="como-comprar" class="section-tight steps-band">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Sin riesgo</span>
+      <h2>Comprar es así de <em>fácil</em></h2>
+      <p>No necesitas tarjeta ni pagar por adelantado.</p>
+    </div>
+    <ol class="steps">
+      <li>
+        <span class="step-n">1</span>
+        <i class="bi bi-ui-checks"></i>
+        <h3>Deja tus datos</h3>
+        <p>Elige tu promo y escribe a dónde te lo enviamos. Toma menos de un minuto.</p>
+      </li>
+      <li>
+        <span class="step-n">2</span>
+        <i class="bi bi-whatsapp"></i>
+        <h3>Te confirmamos</h3>
+        <p>Te escribimos por WhatsApp para confirmar tu pedido y te enviamos el número de guía.</p>
+      </li>
+      <li>
+        <span class="step-n">3</span>
+        <i class="bi bi-house-heart"></i>
+        <h3>Pagas al recibir</h3>
+        <p>Lo recibes en tu casa y pagas en efectivo al transportador. Envío gratis.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- Quién está detrás -->
+<section id="nosotros" class="section founder">
+  <div class="wrap founder-grid">
+    <figure class="founder-photo">
+      <img src="eduardo-guerra.jpg" alt="Eduardo Guerra corriendo una carrera atlética" width="290" height="409" loading="lazy">
+      <figcaption>
+        <strong>Eduardo Guerra</strong>
+        <span>Socio fundador de Vidalud</span>
+      </figcaption>
+    </figure>
+
+    <div class="founder-copy">
+      <span class="eyebrow">Quién está detrás</span>
+      <h2>Hecho por alguien que vive el <em>deporte</em></h2>
+      <p>
+        Eduardo tiene 26 años y es licenciado en Educación Física, Recreación y Deportes.
+        Juega baloncesto, entrena en el gimnasio y corre carreras atléticas.
+      </p>
+      <p>
+        En el deporte se aprende que rendir no es solo entrenar: también es recuperarse y descansar bien.
+        Con esa idea fundó Vidalud: traer a Colombia un magnesio completo, a buen precio
+        y con la tranquilidad de pagar cuando lo recibes.
+      </p>
+      <ul class="founder-facts">
+        <li><i class="bi bi-mortarboard"></i> Licenciado en Educación Física, Recreación y Deportes</li>
+        <li><i class="bi bi-dribbble"></i> Baloncesto y gimnasio</li>
+        <li><i class="bi bi-person-arms-up"></i> Corredor de carreras atléticas</li>
+      </ul>
+      <a class="founder-ig" href="https://www.instagram.com/eduardoguerra3/" target="_blank" rel="noopener">
+        <i class="bi bi-instagram"></i> Conócelo en Instagram: &#64;eduardoguerra3
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Beneficios -->
+<section id="beneficios" class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Beneficios</span>
+      <h2>Un mineral que tu cuerpo usa <em>todo el día</em></h2>
+      <p>El magnesio participa en cientos de procesos del cuerpo. Estos son los que más vas a notar.</p>
+    </div>
+    <div class="benefits">
+      @for (b of benefits; track b.title) {
+        <article class="benefit">
+          <span class="benefit-icon"><i class="bi" [class]="b.icon"></i></span>
+          <h3>{{ b.title }}</h3>
+          <p>{{ b.text }}</p>
+        </article>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Fórmula -->
+<section id="formula" class="section formula">
+  <div class="wrap formula-grid">
+    <div class="formula-media">
+      <img src="videos/producto.jpg" alt="Frasco de Magnesium Complex en la mano" loading="lazy">
+    </div>
+    <div class="formula-copy">
+      <span class="eyebrow">La fórmula</span>
+      <h2>¿Por qué <em>8 formas</em> de magnesio?</h2>
+      <p class="formula-lead">
+        La mayoría de suplementos trae una sola forma, como óxido o cloruro. Cada forma de magnesio
+        se absorbe y se aprovecha de manera distinta, por eso Magnesium Complex combina 8 en una sola fórmula:
+        <strong>1.000 mg de magnesio por porción</strong> (2 cápsulas vegetales).
+      </p>
+      <ul class="forms">
+        @for (f of forms; track f.name) {
+          <li><strong>{{ f.name }}</strong><span>{{ f.text }}</span></li>
+        }
+      </ul>
+      <p class="seals-title">Según la etiqueta del frasco:</p>
+      <ul class="seals">
+        <li><i class="bi bi-patch-check"></i> Fabricado bajo normas GMP</li>
+        <li><i class="bi bi-eyedropper"></i> Probado en laboratorio</li>
+        <li><i class="bi bi-flower2"></i> Sin OGM (Non-GMO)</li>
+        <li><i class="bi bi-geo-alt"></i> Formulado en EE. UU.</li>
+      </ul>
+      <button type="button" class="btn-gold" (click)="cart.checkout()">
+        Quiero mi promo 2x1 <i class="bi bi-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+</section>

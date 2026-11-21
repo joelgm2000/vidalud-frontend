@@ -1,0 +1,30 @@
+<section id="videos" class="section reels-section">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">En video</span>
+      <h2>¿Por qué todos están hablando del <em>magnesio</em>?</h2>
+      <p>Toca un video para verlo con sonido.</p>
+    </div>
+  </div>
+
+  <div class="reels-scroller" #scroller>
+    @for (r of reels; track r.src; let i = $index) {
+      <figure class="reel" [class.playing]="playing() === i">
+        <video #reelVideo [src]="r.src" [poster]="r.poster" preload="none" playsinline
+               (ended)="playing.set(-1)"></video>
+        @if (playing() !== i) {
+          <button type="button" class="reel-play" (click)="play(i)" [attr.aria-label]="'Ver video: ' + r.title">
+            <span class="play-circle"><i class="bi bi-play-fill"></i></span>
+          </button>
+        }
+        <figcaption>{{ r.title }}</figcaption>
+      </figure>
+    }
+  </div>
+
+  <div class="wrap reels-cta">
+    <button type="button" class="btn-green btn-lg" (click)="cart.checkout()">
+      Pedir mi promo 2x1 · {{ price }} <i class="bi bi-arrow-right"></i>
+    </button>
+  </div>
+</section>

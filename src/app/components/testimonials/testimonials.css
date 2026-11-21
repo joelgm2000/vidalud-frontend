@@ -1,64 +1,104 @@
-/* Contenedor del video - ALTURA LIMITADA */
-.test-card__video {
-  position: relative;
-  overflow: hidden;
-  background-color: black;
-  height: 420px; /* <--- Esto es lo que evita que se vean gigantes */
+/* ── Testimonios ── */
+.testi-grid { display: grid; grid-template-columns: 1fr 1fr 1.1fr; gap: 20px; align-items: stretch; }
+.testi {
+  margin: 0; background: var(--vl-white); border-radius: var(--vl-radius); overflow: hidden;
+  border: 1px solid var(--vl-line); display: flex; flex-direction: column;
+}
+/* El recuadro manda el tamaño; el video se ajusta adentro y no empuja la frase. */
+.testi-video { position: relative; flex: 1 1 auto; min-height: 380px; background: var(--vl-green-900); overflow: hidden; }
+.testi-video video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.testi-play {
+  position: absolute; inset: 0; border: 0; padding: 0; cursor: pointer;
+  background: rgba(15, 42, 32, .25); display: flex; align-items: center; justify-content: center;
+}
+.play-circle {
+  width: 64px; height: 64px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: rgba(255, 255, 255, .92); color: var(--vl-green-900); font-size: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .3); transition: transform .2s ease;
+}
+.play-circle i { margin-left: 4px; }
+.testi-play:hover .play-circle { transform: scale(1.08); }
+.testi figcaption {
+  flex: 0 0 auto; min-height: 64px; display: flex; align-items: center;
+  padding: 18px 20px; font-family: var(--vl-serif); font-size: 1.15rem; font-style: italic; color: var(--vl-green-900);
 }
 
-.test-card__video video {
-  width: 100% !important;
-  height: 100% !important; /* <--- Ocupa exacto los 420px */
-  object-fit: contain !important; /* Muestra el video completo sin recortar */
-  display: block;
+/* ── Guía ── */
+.guide {
+  background: var(--vl-green-800); color: #dfe8e2; border-radius: var(--vl-radius);
+  padding: 32px 28px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center;
+}
+.guide-icon {
+  width: 64px; height: 64px; border-radius: 18px; margin-bottom: 16px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: rgba(201, 162, 74, .15); color: var(--vl-gold); font-size: 1.9rem;
+}
+.guide-tag {
+  display: inline-flex; gap: 6px; align-items: center;
+  background: var(--vl-gold); color: var(--vl-green-900);
+  font-size: .75rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  padding: 5px 11px; border-radius: 999px;
+}
+.guide h3 { color: #fff; font-size: 1.6rem; margin: 16px 0 10px; }
+.guide p { color: #b9c9be; margin-bottom: 14px; }
+.guide ul { list-style: none; padding: 0; margin: 4px 0 26px; display: grid; gap: 12px; }
+.guide li { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.guide li i { color: var(--vl-gold); font-size: 1.25rem; }
+.guide .btn-ghost { color: #fff; border-color: rgba(255, 255, 255, .3); }
+.guide .btn-ghost:hover { background: rgba(255, 255, 255, .08); color: #fff; }
+
+/* ── Comentarios ── */
+.reviews { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 20px; }
+.review {
+  background: var(--vl-white); border: 1px solid var(--vl-line); border-radius: var(--vl-radius);
+  padding: 22px; display: flex; flex-direction: column;
+}
+.review-stars { color: var(--vl-gold); font-size: .95rem; display: flex; gap: 3px; }
+.review p { color: var(--vl-ink); line-height: 1.6; margin: 12px 0 18px; flex: 1; }
+.review footer { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.review-avatar {
+  width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--vl-green-100); color: var(--vl-green-700); font-family: var(--vl-serif); font-weight: 700;
+}
+.review footer strong { display: block; color: var(--vl-green-900); font-size: .95rem; }
+.review footer small { color: var(--vl-muted); font-size: .82rem; }
+.review-tag {
+  margin-left: auto; display: inline-flex; align-items: center; gap: 5px;
+  background: var(--vl-cream); color: var(--vl-green-700); border-radius: 999px; padding: 4px 10px;
+  font-size: .75rem; font-weight: 600;
 }
 
-/* Botón de Play (Capa oscura) */
-.test-card__play-btn {
-  background: rgba(0, 0, 0, 0.3);
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
+/* ── Preguntas ── */
+.faq-section { background: var(--vl-white); border-top: 1px solid var(--vl-line); }
+.faq-wrap { display: grid; grid-template-columns: .8fr 1.2fr; gap: 56px; align-items: start; }
+.faq-head { position: sticky; top: 100px; }
+.faq-head h2 { font-size: clamp(1.9rem, 4vw, 2.75rem); line-height: 1.1; margin: 10px 0 14px; }
+.faq-head p { color: var(--vl-muted); margin-bottom: 22px; }
+.faq-head .btn-ghost i { color: #1fa855; font-size: 1.1rem; }
 
-.test-card__play-btn:hover {
-  background: rgba(0, 0, 0, 0.1);
+.faq { border-bottom: 1px solid var(--vl-line); }
+.faq:first-child { border-top: 1px solid var(--vl-line); }
+.faq summary {
+  list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px;
+  padding: 20px 4px; font-weight: 700; font-size: 1.05rem; color: var(--vl-green-900);
 }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary i { color: var(--vl-gold-600); transition: transform .2s ease; flex-shrink: 0; }
+.faq[open] summary i { transform: rotate(45deg); }
+.faq summary:focus-visible { outline: 3px solid var(--vl-green-500); outline-offset: 2px; border-radius: 6px; }
+.faq p { margin: 0; padding: 0 4px 22px; color: var(--vl-muted); line-height: 1.65; }
 
-/* El Círculo Verde del Play */
-.play-icon-circle {
-  width: 65px;
-  height: 65px;
-  background-color: #0b986a; /* Verde Vidalud */
-  border-radius: 50%;
-  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+@media (max-width: 991px) {
+  .reviews { grid-template-columns: 1fr; }
+  .testi-grid { grid-template-columns: 1fr 1fr; }
+  .guide { grid-column: 1 / -1; }
+  .faq-wrap { grid-template-columns: 1fr; gap: 28px; }
+  .faq-head { position: static; }
 }
-
-.test-card__play-btn:hover .play-icon-circle {
-  transform: scale(1.15);
-  background-color: #09855c;
-}
-
-/* Ocultar botón al reproducir */
-.test-card.playing .test-card__play-btn {
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* Tarjeta Animaciones */
-.test-card {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.test-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(11, 152, 106, 0.15) !important;
-}
-
-/* Efecto de elevación para el botón de descarga */
-.hover-lift {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.hover-lift:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 20px rgba(11, 152, 106, 0.3) !important;
+@media (max-width: 575px) {
+  .testi-grid { grid-template-columns: 1fr; }
+  .testi-video { min-height: 480px; }
 }

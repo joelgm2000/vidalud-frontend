@@ -1,0 +1,44 @@
+.reels-section { background: var(--vl-cream-2); }
+
+.reels-scroller {
+  display: grid; grid-auto-flow: column; grid-auto-columns: 260px; gap: 18px;
+  overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 20px;
+  padding: 4px max(20px, calc((100vw - 1140px) / 2)) 18px;
+  scrollbar-width: thin;
+}
+@media (min-width: 1200px) {
+  .reels-scroller { justify-content: center; grid-auto-columns: 255px; }
+}
+
+.reel {
+  position: relative; margin: 0; scroll-snap-align: start;
+  aspect-ratio: 9 / 16; border-radius: 22px; overflow: hidden;
+  background: var(--vl-green-900); box-shadow: var(--vl-shadow);
+}
+.reel video { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.reel-play {
+  position: absolute; inset: 0; border: 0; padding: 0; cursor: pointer;
+  background: rgba(15, 42, 32, .18);
+  display: flex; align-items: center; justify-content: center;
+}
+.play-circle {
+  width: 64px; height: 64px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: rgba(255, 255, 255, .92); color: var(--vl-green-900); font-size: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .3); transition: transform .2s ease;
+}
+.play-circle i { margin-left: 4px; }
+.reel-play:hover .play-circle { transform: scale(1.08); }
+.reel-play:focus-visible { outline: 3px solid var(--vl-gold); outline-offset: -3px; }
+
+/* Los videos ya traen su título quemado: el texto queda solo para lectores de pantalla. */
+.reel figcaption {
+  position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+}
+
+.reels-cta { text-align: center; margin-top: 22px; }
+
+@media (max-width: 575px) {
+  .reels-scroller { grid-auto-columns: 72%; }
+}

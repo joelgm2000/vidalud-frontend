@@ -1,90 +1,59 @@
-import { Component, ViewChild, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Features } from '../features/features'; 
-import { OrderForm } from '../order-form/order-form'; 
+import { Component, ElementRef, ViewChild, computed, inject, signal } from '@angular/core';
+import { BUNDLES, CAPSULES_PER_BOTTLE, CartService, LIST_PRICE, UNIT_PRICE, cop, safePlay } from '../../services/cart.service';
+
+interface MediaItem {
+  type: 'video' | 'image';
+  src: string;
+  poster?: string;
+}
 
 @Component({
   selector: 'app-hero',
   standalone: true,
-  imports: [CommonModule, Features, OrderForm],
-  templateUrl: './hero.html', 
-  styleUrls: ['./hero.css']
+  templateUrl: './hero.html',
+  styleUrl: './hero.css'
 })
-export class Hero implements AfterViewInit, OnDestroy {
-  currentIndex = 0;
-  @ViewChild('heroVideo') videoRef!: ElementRef<HTMLVideoElement>;
-  
-  isMuted = true;
-  private observer: IntersectionObserver | null = null;
-  private userManuallyUnmuted = false; // Guarda la preferencia del usuario
+export class Hero {
+  readonly cart = inject(CartService);
+  readonly bundles = BUNDLES;
+  readonly unit = UNIT_PRICE;
+  readonly list = LIST_PRICE;
+  readonly capsules = CAPSULES_PER_BOTTLE;
+  readonly cop = cop;
 
-  ngAfterViewInit() {
-    const video = this.videoRef.nativeElement;
-    video.muted = true;
+  videoRef?: ElementRef<HTMLVideoElement>;
 
-    // 🔥 Observador para saber si el video está visible en la pantalla
-    this.observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          // Si el usuario vuelve a ver el video: Forzamos que corra
-          video.play().catch(() => console.log('Autoplay bloqueado por el navegador'));
-          
-          // Si el usuario ya le había activado el sonido antes, se lo devolvemos automáticamente
-          if (this.userManuallyUnmuted) {
-            video.muted = false;
-            this.isMuted = false;
-          }
-        } else {
-          // Si hace scroll hacia abajo y no lo ve: Pausamos y silenciamos para ahorrar batería/datos
-          video.pause();
-          video.muted = true;
-          this.isMuted = true;
-        }
-      });
-    }, { threshold: 0.3 }); // Se activa cuando al menos el 30% del video está visible
-
-    this.observer.observe(video);
+  /** Cada vez que el video aparece, arranca silenciado (los navegadores bloquean el autoplay con sonido). */
+  @ViewChild('heroVideo') set heroVideo(ref: ElementRef<HTMLVideoElement> | undefined) {
+    this.videoRef = ref;
+    if (!ref) return;
+    const v = ref.nativeElement;
+    v.muted = true;
+    this.muted.set(true);
+    safePlay(v);
   }
 
-  ngOnDestroy() {
-    // Limpiamos la memoria al salir
-    if (this.observer) {
-      this.observer.disconnect();
-    }
-  }
-
-  toggleMute() {
-    const video = this.videoRef.nativeElement;
-    
-    // Si el video estaba pegado/congelado en el celular, esto lo obliga a arrancar
-    if (video.paused) {
-      video.play().catch(() => console.log('Esperando interacción...'));
-    }
-
-    video.muted = !video.muted;
-    this.isMuted = video.muted;
-
-    // Si el usuario le quita el silencio manualmente, el sistema aprende que quiere sonido
-    if (!video.muted) {
-      this.userManuallyUnmuted = true;
-    } else {
-      this.userManuallyUnmuted = false;
-    }
-  }
-  
-  images = [
-    'IMAGEN_PRODUCTO_3.jpeg',
-    'IMAGEN_PRODUCTO_4.jpeg',
-    'IMAGEN_PRODUCTO_5.jpeg',
-    'IMAGEN_PRODUCTO_6.jpeg',
-    'IMAGEN_PRODUCTO_2.jpg'
+  readonly media: MediaItem[] = [
+    { type: 'video', src: 'videos/producto.mp4', poster: 'videos/producto.jpg' },
+    { type: 'image', src: 'IMAGEN_PRODUCTO_7.jpeg' },
+    { type: 'image', src: 'IMAGEN_PRODUCTO_4.jpeg' },
+    { type: 'image', src: 'IMAGEN_PRODUCTO_1.jpg' },
   ];
 
-  selectImage(index: number) {
-    this.currentIndex = index;
+  readonly index = signal(0);
+  readonly current = computed(() => this.media[this.index()]);
+  readonly muted = signal(true);
+
+  select(i: number) {
+    this.index.set(i);
+    this.muted.set(true);
   }
 
-  get currentImage(): string {
-    return this.images[this.currentIndex];
+  toggleSound() {
+    const video = this.videoRef?.nativeElement;
+    if (!video) return;
+    if (video.paused) safePlay(video);
+    video.muted = !video.muted;
+    this.muted.set(video.muted);
   }
 }

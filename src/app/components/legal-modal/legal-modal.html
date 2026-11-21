@@ -1,0 +1,27 @@
+@if (doc(); as d) {
+<div class="legal-overlay" (click)="legal.close()"></div>
+<div class="legal-box" role="dialog" aria-modal="true" aria-labelledby="legal-title"
+     #box tabindex="-1" (keydown.escape)="legal.close(); $event.stopPropagation()">
+  <header>
+    <div>
+      <h2 id="legal-title">{{ d.title }}</h2>
+      <small>{{ d.updated }}</small>
+    </div>
+    <button type="button" class="legal-close" (click)="legal.close()" aria-label="Cerrar"><i class="bi bi-x-lg"></i></button>
+  </header>
+
+  <div class="legal-body">
+    <p class="legal-intro">{{ d.intro }}</p>
+    @for (s of d.sections; track s.title) {
+      <section>
+        <h3>{{ s.title }}</h3>
+        @for (p of s.paragraphs; track $index) { <p>{{ p }}</p> }
+      </section>
+    }
+  </div>
+
+  <footer>
+    <button type="button" class="btn-green w-100" (click)="legal.close()">Entendido</button>
+  </footer>
+</div>
+}

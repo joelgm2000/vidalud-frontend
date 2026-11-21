@@ -1,181 +1,149 @@
-import { Component, signal, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import { Component, ElementRef, ViewChild, computed, effect, inject, signal } from '@angular/core';
+import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { OrderService, OrderPayload } from '../../services/order.service';
+import { BUNDLES, CartService, UNIT_PRICE, LIST_PRICE, WHATSAPP_NUMBER, cop } from '../../services/cart.service';
+import { DEPARTMENTS } from '../../data/colombia';
+import { LegalService } from '../../services/legal.service';
 
-declare var bootstrap: any;
+const SKU_PRODUCT = '2078012';
 
-const PRICE_DISCOUNT = 99900;
-const SKU_PRODUCT    = '2078012';
-
-const DEPARTMENTS: Record<string, string[]> = {
-  'ANTIOQUIA': ['APARTADO','BARBOSA','BELLO','CALDAS','CASABE - YONDO','CAUCASIA','COPACABANA','DABEIBA','DORADAL','ENVIGADO','GIRARDOTA','GUARNE','ITAGUI','LA CEJA','LA ESTRELLA','LA SIERRA','MARINILLA','MEDELLIN','PUERTO BERRIO','PUERTO TRIUNFO','RETIRO','RIONEGRO (ANT)','SABANETA','SAN ANTONIO DE PRADO','SAN JUAN DE URABA','SAN PEDRO DE LOS MILAGROS','ZARAGOZA'],
-  'ARAUCA': ['ARAUCA','FORTUL','SARAVENA','TAME'],
-  'ATLANTICO': ['BARANOA','BARRANQUILLA','GALAPA','JUAN DE ACOSTA','MALAMBO','PUERTO COLOMBIA','SABANAGRANDE','SABANALARGA','SANTO TOMAS','SOLEDAD','USIACURI'],
-  'BOLIVAR': ['ARJONA B','BAYUNCA','CANTAGALLO','CARTAGENA','CASCAJAL','EL CARMEN DE BOLIVAR','MAGANGUE','MALAGANA','MARIA LA BAJA B','MOMPOS','MORALES (B)','PASACABALLOS','SAN JACINTO','SAN JUAN NEPOMUCENO','SAN MARTIN DE LOBA','SANTA ROSA DEL SUR','SIMITI','TURBACO B','ZAMBRANO'],
-  'BOYACA': ['AQUITANIA','ARCABUCO','BELEN','BERBEO','BOAVITA','BUENAVISTA','CHINAVITA','CHIQUINQUIRA','CHISCAS','CHITA','CHIVATA','CHIVOR','CIENEGA','COMBITA','CUCAITA','DUITAMA','EL COCUY','EL ESPINO','FIRAVITOBA','GARAGOA','GUATEQUE','GUAYATA','GUICAN','JENESANO','MARIPI','MIRAFLORES','MONGUA','MONGUI','MONIQUIRA','MUZO','NOBSA','NUEVO COLON','OICATA','OTANCHE','PACHAVITA','PAEZ','PAIPA','PAJARITO','PANQUEBA','PAUNA','PAZ DE RIO','PESCA','PUERTO BOYACA','RAMIRIQUI','RAQUIRA','SABOYA','SACHICA','SAMACA','SAN JOSE DE PARE','SAN LUIS DE GACENO','SAN MATEO','SAN MIGUEL DE SEMA','SANTA BARBARA','SANTA MARIA','SANTA ROSA DE VITERBO','SANTA SOFIA','SANTANA','SIACHOQUE','SOATA','SOCHA','SOCOTA','SOGAMOSO','SOMONDOCO','SORACA','SOTAQUIRA','SUTAMARCHAN','TASCO','TENZA','TIBANA','TIBASOSA','TIERRA NEGRA','TINJACA','TIPACOQUE','TOCA','TOPAGA','TUNJA','TURMEQUE','TUTA','UMBITA','VENTAQUEMADA','VILLA DE LEYVA','ZETAQUIRA'],
-  'CALDAS': ['AGUADAS','ANSERMA','ARANZAZU','BELALCAZAR (CL)','BOLIVIA','CHINCHINA','FILADELFIA','LA DORADA','LA MERCED','MANIZALES','MANZANARES','MARQUETALIA','NEIRA','NORCASIA','PACORA','PALESTINA','PENSILVANIA','RIOSUCIO','RISARALDA','SALAMINA','SUPIA','VILLAMARIA','VITERBO'],
-  'CAQUETA': ['BELEN DE LOS ANDAQUIES','CARTAGENA DEL CHAIRA','CURILLO','EL DONCELLO','EL PAUJIL','FLORENCIA','LA MONTAÑITA','PUERTO RICO','SAN JOSE DEL FRAGUA','SAN VICENTE DEL CAGUAN'],
-  'CASANARE': ['AGUAZUL','HATO COROZAL','LA CHAPARRERA','MANI','MONTERREY','NUNCHIA','OROCUE','PASO CUSIANA','PAZ DE ARIPORO','TAMARA','TAURAMENA','TRINIDAD','VILLA CAROLA','VILLANUEVA (C)','YOPAL'],
-  'CAUCA': ['BELALCAZAR (CA)','CAJIBIO','CALOTO','CORINTO','FLORENCIA','PIENDAMO','POPAYAN','PUERTO TEJADA','SANTANDER DE QUILICHAO','TIMBA','TIMBIO','VILLA RICA'],
-  'CESAR': ['AGUACHICA','BECERRIL','BOSCONIA','CHIMICHAGUA','CHIRIGUANA','CODAZZI','CURUMANI','EL COPEY','EL JUNCAL','EL PASO','GAMARRA','LA GLORIA','LA JAGUA DE IBIRICO','LA LOMA','LA MATA','LA PAZ','LA SIERRA','LAS VEGAS','MANAURE (C)','MINA DRUMOND PRIBBENOW','PAILITAS','PELAYA','PUEBLO BELLO','RIO DE ORO','SAN ALBERTO','SAN DIEGO','SAN MARTIN (C)','SAN ROQUE','VALLEDUPAR'],
-  'CHOCO': ['QUIBDO'],
-  'CORDOBA': ['AYAPEL','BUENAVISTA (COR)','CANALETE','CARRILLO','CERETE','CHIMA (C)','CHINU','CIENAGA DE ORO','COTORRA','COTORRA (I)','EL PORVENIR (C)','LA APARTADA Y LA FRONTERA','LORICA','LOS CORDOBAS','MOMIL','MOÑITOS','MONTELIBANO','MONTERIA','PUEBLO NUEVO','PUERTO ESCONDIDO','PURISIMA','SAHAGUN','SAN ANDRES DE SOTAVENTO','SAN ANTERO','SAN BERNARDO DEL VIENTO','SAN CARLOS','SAN PELAYO','TIERRALTA','TUCHIN','VALENCIA'],
-  'CUNDINAMARCA': ['AGUA DE DIOS','ALBAN','ANAPOIMA','ANOLAIMA','APULO','ARBELAEZ','BOGOTA','BOJACA','BRICEÑO','CABRERA','CACHIPAY','CAJICA','CAPARRAPI','CAPELLANIA','CAQUEZA','CHIA','CHINAUTA','CHIPAQUE','CHOACHI','COTA','CUCUNUBA','EL COLEGIO (MESITAS)','EL ROSAL','EL TRIUNFO','FACATATIVA','FOMEQUE','FOSCA','FUNZA','FUSAGASUGA','GAMA','GIRARDOT','GUADUAS','GUASCA','GUAYABAL DE SIQUIMA','GUAYABETAL','LA CALERA','LA FLORIDA','LA MESA','MACHETA','MADRID','MANTA','MEDINA','MOSQUERA','NEMOCON','NILO','PANDI','PARATEBUENO','PUENTE DE PIEDRA','PUENTE QUETAME','PUERTO SALGAR','QUEBRADANEGRA','QUETAME','QUIPILE','SAN BERNARDO','SAN JOAQUIN (C)','SAN JUAN DE RIO SECO','SANTANDERCITO','SASAIMA','SIBATE','SILVANIA','SIMIJACA','SOACHA','SOPO','SUBACHOQUE','SUBIA','SUTATAUSA','TABIO','TAUSA','TENA','TENJO','TOCAIMA','TOCANCIPA','UBALA','UBATE','UNE','UTICA','VENECIA (C)','VIANI','VILLAPINZON','VILLETA','VIOTA','YACOPI','ZIPAQUIRA'],
-  'GUAVIARE': ['SAN JOSE DEL GUAVIARE'],
-  'HUILA': ['ACEVEDO','AIPE','ALGECIRAS','ALTAMIRA','BARAYA','CAMPOALEGRE','COLOMBIA','EL JUNCAL','ELIAS','FORTALECILLAS','GARZON','GIGANTE','GUADALUPE','HOBO','IQUIRA','LA PLATA','NEIVA','OPORAPA','PAICOL','PALERMO','PITAL','PITALITO','RIVERA','SALADOBLANCO','SAN AGUSTIN','SAN JOSE DE ISNOS','SANTA MARIA','SUAZA','TARQUI','TELLO','TERUEL','TESALIA','TIMANA','VILLAVIEJA','YAGUARA','ZULUAGA'],
-  'LA GUAJIRA': ['ALBANIA','BARRANCAS','DISTRACCION','EL MOLINO','FONSECA','HATONUEVO','LA MINA','MAICAO','PALOMINO','PARAGUACHON','RIOHACHA','URIBIA','URUMITA','VILLANUEVA'],
-  'MAGDALENA': ['ARACATACA','CIENAGA','EL BANCO','EL DIFICIL','FUNDACION','GAIRA','LA GRAN VIA','NUEVA GRANADA (M)','PEDRAZA','PIJIÑO','PIVIJAY','PLATO','SAN SEBASTIAN DE BUENAVISTA','SAN ZENON','SANTA ANA (M)','SANTA MARTA','SITIO NUEVO','TAGANGA'],
-  'META': ['ACACIAS','ALTO POMPEYA','APIAY','BARRANCA DE UPIA','CABUYARO','CASTILLA LA NUEVA','CUBARRAL','CUMARAL','EL CASTILLO','EL DORADO','FUENTE DE ORO','GRANADA (M)','GUAMAL','LA PALMERA','LEJANIAS','MAPIRIPAN','MEDELLIN DEL ARIARI','MESETAS','PACHAQUIARO','PUERTO CONCORDIA','PUERTO GAITAN','PUERTO LLERAS','PUERTO LOPEZ','PUERTO RICO','RESTREPO','SAN CARLOS DE GUAROA','SAN JUAN DE ARAMA','SAN LORENZO','SAN MARTIN','VILLAVICENCIO','VISTAHERMOSA'],
-  'NARIÑO': ['CUASPUD NUCLEO','EL TAMBO (NA)','GUAITARILLA','IMUES','IPIALES','LA CRUZ','LA UNION','LLORENTE','PASTO','SAMANIEGO'],
-  'NORTE DE SANTANDER': ['AGUAS CLARAS','ARBOLEDAS','CACHIRA','CAMPO DOS','CHINACOTA','CHITAGA','CONVENCION','CUCUTA','DURANIA','EL ZULIA','LA DONJUANA','LA ESPERANZA','LA VEGA','LOS PATIOS','OCAÑA','PAMPLONA','PUERTO SANTANDER','SALAZAR','SARDINATA','SILOS','TIBU','TOLEDO','VILLA DEL ROSARIO'],
-  'PUTUMAYO': ['LA DORADA (P)','LA HORMIGA','MOCOA','ORITO','PUERTO ASIS','PUERTO CAICEDO','SAN FRANCISCO','SANTANA','SANTIAGO','SIBUNDOY','VILLAGARZON'],
-  'QUINDIO': ['ARMENIA (Q)','BUENAVISTA','CALARCA','CIRCASIA','EL CAIMO','FILANDIA','GENOVA (Q)','LA TEBAIDA','MONTENEGRO','PUEBLO TAPADO','QUIMBAYA'],
-  'RISARALDA': ['ALTAGRACIA','APIA','BALBOA','BELEN DE UMBRIA','CAIMALITO','DOSQUEBRADAS','GUATICA','IRRA','LA CELIA','LA VIRGINIA','MARSELLA','MISTRATO','PEREIRA','QUINCHIA','SANTA ROSA DE CABAL','SANTUARIO'],
-  'SANTANDER': ['ACAPULCO','ALBANIA (S)','ARATOCA','BARBOSA','BARRANCABERMEJA','BERLIN','BUCARAMANGA','CHARALA','CHIPATA','CIMITARRA','CITE','CONCEPCION','CONFINES','CONTRATACION','COROMORO','CURITI','EL CARMEN DE CHUCURI','EL CENTRO','EL GUACAMAYO','EL PLAYON','ENCINO','ENCISO','FLORIDABLANCA','GALAN (S)','GAMBITA','GIRON','GUACA','GUADALUPE','GUEPSA','LA FORTUNA','LANDAZURI','LEBRIJA','LOS LAURELES','LOS SANTOS','MALAGA','MATANZA','MOGOTES','MOLAGAVITA','OCAMONTE','OIBA','OLIVAL','ONZAGA','PALMAS DEL SOCORRO','PARAMO','PIEDECUESTA','PINCHOTE','PUENTE NACIONAL','PUERTO ARAUJO','PUERTO PARRA','PUERTO WILCHES','RIONEGRO','SABANA DE TORRES','SAN ANDRES','SAN GIL','SAN RAFAEL','SAN VICENTE DE CHUCURI','SANTA HELENA DEL OPON','SOCORRO','SUAITA','SURATA','TIENDA NUEVA','TONA','VALLE DE SAN JOSE','VELEZ','VILLANUEVA','YARIMA','ZAPATOCA'],
-  'SUCRE': ['COROZAL','COVEÑAS','GALERAS','OVEJAS','PALMITO','SAMPUES','SAN MARCOS','SAN ONOFRE','SAN PEDRO','SINCE','SINCELEJO','SUCRE (S)','TOLU'],
-  'TOLIMA': ['ALVARADO','AMBALEMA','ARMERO','ATACO','BUENOS AIRES','CAJAMARCA','CARMEN DE APICALA','CHAPARRAL','CHICORAL','COYAIMA','CUNDAY','DOLORES','ESPINAL','FLANDES','GUAMO','HERVEO','HONDA','IBAGUE','ICONONZO','LERIDA','LIBANO','MARIQUITA','MELGAR','MURILLO','NATAGAIMA','OLAYA HERRERA','ORTEGA','PIEDRAS','PRADO','PURIFICACION','RIOBLANCO','ROVIRA','SALDAÑA','SAN ANTONIO','SAN LUIS','SUAREZ','VALLE DE SAN JUAN','VENADILLO','VILLARRICA (T)'],
-  'VALLE': ['ANDALUCIA','ANSERMA NUEVO','ARGELIA (V)','BOLIVAR (V)','BORRERO AYERBE','BUENAVENTURA','BUGA','BUGALAGRANDE','CAICEDONIA','CALI','CANDELARIA','CARTAGO','DARIEN (CALIMA)','EL AGUILA','EL CAIRO','EL CERRITO','EL DOVIO','EL PLACER (V)','EL QUEREMAL','FLORIDA','GINEBRA','GUACARI','JAMUNDI','LA PAILA','LA UNION (V)','LA VICTORIA (V)','OBANDO','PALMIRA','PRADERA','RESTREPO','ROLDANILLO','ROZO','SAN PEDRO(V)','SEVILLA','TORO','TRUJILLO','TULUA','VERSALLES','VILLA GORGONA','YOTOCO','YUMBO','ZARZAL'],
-};
-
-function emailMatchValidator(control: AbstractControl): ValidationErrors | null {
-  const email = control.get('email')?.value?.toLowerCase().trim();
-  const emailConfirm = control.get('emailConfirm')?.value?.toLowerCase().trim();
-  if (email && emailConfirm && email !== emailConfirm) {
-    return { emailMismatch: true };
-  }
-  return null;
-}
+type Step = 'form' | 'review' | 'done';
 
 @Component({
   selector: 'app-order-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [ReactiveFormsModule],
   templateUrl: './order-form.html',
   styleUrl: './order-form.css'
 })
 export class OrderForm {
   private fb = inject(FormBuilder);
   private orderSvc = inject(OrderService);
+  readonly cart = inject(CartService);
+  readonly legal = inject(LegalService);
 
-  loading = signal(false);
-  form: FormGroup;
-  departments = Object.keys(DEPARTMENTS).sort();
-  availableCities: string[] = [];
-  quantity = 1;
-  readonly UNIT_PRICE = PRICE_DISCOUNT;
+  @ViewChild('panel') panel?: ElementRef<HTMLElement>;
+
+  readonly cop = cop;
+  readonly bundles = BUNDLES;
+  readonly unit = UNIT_PRICE;
+  readonly list = LIST_PRICE;
+  readonly departments = Object.keys(DEPARTMENTS).sort();
+
+  readonly step = signal<Step>('form');
+  readonly loading = signal(false);
+  readonly error = signal('');
+  readonly orderId = signal('');
+  readonly cities = signal<string[]>([]);
+  readonly waConfirmUrl = signal('');
+  readonly savings = computed(() => this.cart.qty() * (LIST_PRICE - UNIT_PRICE));
+
+  readonly form = this.fb.nonNullable.group({
+    firstName:    ['', [Validators.required, Validators.minLength(2)]],
+    lastName:     ['', [Validators.required, Validators.minLength(2)]],
+    phone:        ['', [Validators.required, Validators.pattern(/^3\d{9}$/)]],
+    email:        ['', [Validators.email]],
+    department:   ['', Validators.required],
+    city:         ['', Validators.required],
+    address:      ['', [Validators.required, Validators.minLength(5)]],
+    neighborhood: ['', [Validators.required, Validators.minLength(3)]],
+    notes:        [''],
+    accept:       [false, Validators.requiredTrue],
+  });
 
   constructor() {
-    this.form = this.fb.group({
-      firstName:    ['', [Validators.required, Validators.minLength(2)]],
-      lastName:     ['', [Validators.required, Validators.minLength(2)]],
-      phone:        ['', [Validators.required, Validators.pattern(/^3[0-9]{9}$/)]],
-      email:        ['', [Validators.required, Validators.email]],
-      emailConfirm: ['', [Validators.required, Validators.email]],
-      department:   ['', Validators.required],
-      city:         ['', Validators.required],
-      address:      ['', [Validators.required, Validators.minLength(5)]],
-      neighborhood: ['', [Validators.required, Validators.minLength(3)]],
-      notes:        ['']
-    }, { validators: emailMatchValidator });
+    this.form.controls.department.valueChanges.subscribe(dep => {
+      this.cities.set(DEPARTMENTS[dep] ?? []);
+      this.form.controls.city.setValue('');
+    });
 
-    this.form.get('department')?.valueChanges.subscribe(dep => {
-      this.availableCities = DEPARTMENTS[dep] || [];
-      this.form.get('city')?.setValue('');
+    // Bloquea el scroll del fondo y lleva el foco al panel al abrir.
+    effect(() => {
+      const open = this.cart.isOpen();
+      document.body.classList.toggle('vl-lock', open);
+      if (open) setTimeout(() => this.panel?.nativeElement.focus(), 30);
     });
   }
 
-  get total() { return this.quantity * this.UNIT_PRICE; }
-
-  changeQuantity(amount: number) {
-    const newVal = this.quantity + amount;
-    if (newVal >= 1 && newVal <= 10) this.quantity = newVal;
+  /** Deja solo dígitos en el celular y quita el 57 si lo escriben. */
+  normalizePhone() {
+    const c = this.form.controls.phone;
+    let digits = c.value.replace(/\D/g, '');
+    if (digits.length === 12 && digits.startsWith('57')) digits = digits.slice(2);
+    if (digits !== c.value) c.setValue(digits);
   }
 
-  isInvalid(field: string): boolean {
-    const control = this.form.get(field);
-    return !!(control && control.invalid && (control.dirty || control.touched));
+  invalid(field: keyof typeof this.form.controls): boolean {
+    const c = this.form.controls[field];
+    return c.invalid && (c.dirty || c.touched);
   }
 
-  openConfirmModal() {
+  private redirectTimer?: ReturnType<typeof setTimeout>;
+
+  close() {
+    if (this.loading()) return;
+    clearTimeout(this.redirectTimer);
+    this.cart.close();
+    if (this.step() === 'done') this.step.set('form');
+    this.error.set('');
+  }
+
+  toReview() {
+    this.normalizePhone();
     if (this.form.invalid) {
       this.form.markAllAsTouched();
-      if (this.form.hasError('emailMismatch')) {
-        alert('Los emails no coinciden. Por favor verifica.');
-      } else {
-        alert('Por favor completa todos los campos correctamente.');
-      }
+      this.error.set('Revisa los campos marcados en rojo.');
+      const first = this.panel?.nativeElement.querySelector<HTMLElement>('.ng-invalid:not(form)');
+      first?.focus();
       return;
     }
-    const modalEl = document.getElementById('confirmDataModal');
-    if (modalEl) new bootstrap.Modal(modalEl).show();
+    this.error.set('');
+    this.step.set('review');
+    this.panel?.nativeElement.scrollTo({ top: 0 });
   }
 
-  async submitOrder() {
+  async submit() {
+    if (this.loading()) return;
     this.loading.set(true);
-
-    const fullAddress = `${this.form.value.address}, ${this.form.value.neighborhood}`;
+    this.error.set('');
+    const v = this.form.getRawValue();
 
     const payload: OrderPayload = {
-      fullName:      `${this.form.value.firstName} ${this.form.value.lastName}`,
-      firstName:     this.form.value.firstName,
-      lastName:      this.form.value.lastName,
-      phone:         this.form.value.phone,
-      email:         this.form.value.email,
-      department:    this.form.value.department,
-      city:          this.form.value.city,
-      address:       fullAddress,
-      notes:         this.form.value.notes,
+      fullName:      `${v.firstName} ${v.lastName}`.trim(),
+      firstName:     v.firstName.trim(),
+      lastName:      v.lastName.trim(),
+      phone:         v.phone,
+      email:         v.email.trim(),
+      department:    v.department,
+      city:          v.city,
+      address:       `${v.address.trim()}, ${v.neighborhood.trim()}`,
+      notes:         v.notes.trim(),
       productId:     SKU_PRODUCT,
       size:          'UNICA',
-      quantity:      this.quantity,
-      total:         this.total,
+      quantity:      this.cart.qty(),
+      total:         this.cart.total(),
       paymentMethod: 'cod',
       shipping:      0,
-      subtotal:      this.total
+      subtotal:      this.cart.total(),
     };
 
     try {
-      const orderId = await this.orderSvc.processOrder(payload);
-      bootstrap.Modal.getInstance(document.getElementById('confirmDataModal'))?.hide();
-      this.handleSuccess(orderId);
-    } catch (err) {
-      console.error('Error en checkout:', err);
-      alert('Hubo un problema guardando tu pedido. Por favor intenta nuevamente.');
-      this.loading.set(false); // Solo detenemos el loading si hay error
-    }
-  }
-
-  private handleSuccess(orderId: string) {
-    // 1. Extraemos los datos necesarios antes de limpiar el formulario
-    const firstName = this.form.value.firstName;
-    const lastName = this.form.value.lastName;
-    const city = this.form.value.city;
-
-    // 2. Cerramos el modal y limpiamos todo
-    this.closeModal();
-    this.form.reset();
-    this.quantity = 1;
-    this.form.get('department')?.setValue('');
-
-    // 3. Redirección automática a WhatsApp
-    const phoneNumber = '573114370406'; // Tu número sin el +
-    const message = `¡Hola! Acabo de realizar un pedido de Magnesium Complex. ⚡\n\n*A nombre de:* ${firstName} ${lastName}\n*Ciudad:* ${city}\n*ID de Orden:* ${orderId || 'Pendiente'}\n\nEscribo para confirmar mi pedido de pago contra entrega.`;
-    
-    // Codificamos el texto para que la URL sea válida
-    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-
-    // Redirigimos al usuario en la misma ventana (evita bloqueadores de ventanas emergentes en celulares)
-    window.location.href = whatsappUrl;
-  }
-
-  private closeModal() {
-    const modalEl = document.getElementById('orderModal');
-    if (modalEl) {
-      const instance = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-      instance.hide();
-      document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
-      document.body.classList.remove('modal-open');
+      const id = await this.orderSvc.processOrder(payload);
+      this.orderId.set(id || '');
+      const msg = `¡Hola! Acabo de hacer un pedido de Magnesium Complex.\n\n` +
+        `*Pedido:* #${id || 'pendiente'}\n*A nombre de:* ${payload.fullName}\n` +
+        `*Ciudad:* ${payload.city}\n*Cantidad:* ${this.cart.bottles()} frascos\n*Total:* ${cop(payload.total)}\n\n` +
+        `Escribo para confirmar mi pedido con pago contra entrega.`;
+      this.waConfirmUrl.set(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`);
+      this.step.set('done');
+      this.form.reset();
+      this.cart.setQty(1);
+      // Igual que antes: llevamos al cliente a WhatsApp para confirmar, con unos segundos para leer.
+      this.redirectTimer = setTimeout(() => { window.location.href = this.waConfirmUrl(); }, 4000);
+    } catch {
+      this.error.set('No pudimos registrar tu pedido. Revisa tu conexión e inténtalo de nuevo, o escríbenos por WhatsApp.');
+    } finally {
+      this.loading.set(false);
     }
   }
 }

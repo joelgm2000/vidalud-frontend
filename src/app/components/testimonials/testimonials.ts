@@ -1,79 +1,75 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
-export interface Testimonial {
-  videoUrl:  string;
-  posterUrl: string;
-  name:      string;
-  city:      string;
-  stars:     number;
-  quote:     string;
-}
+import { Component, ElementRef, QueryList, ViewChildren, signal } from '@angular/core';
+import { WHATSAPP_NUMBER, safePlay } from '../../services/cart.service';
 
 @Component({
   selector: 'app-testimonials',
   standalone: true,
-  imports: [CommonModule],
   templateUrl: './testimonials.html',
   styleUrl: './testimonials.css'
 })
 export class Testimonials {
+  readonly playing = signal(-1);
+  readonly waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Hola, tengo una pregunta sobre el Magnesium Complex.')}`;
 
-  testimonials: Testimonial[] = [
-    {
-      videoUrl:  'vidalud-demo.mp4', 
-      posterUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&q=80',
-      name: 'Camila Torres', city: 'Bogotá, D.C.', stars: 5,
-      quote: 'Trabajo todo el día sentada y el dolor de espalda era insoportable. En una semana usando esto noté la diferencia. ¡Súper recomendado!'
-    },
-    {
-      videoUrl:  'vidalud-demo.mp4',
-      posterUrl: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&q=80',
-      name: 'Jorge Méndez', city: 'Medellín', stars: 5,
-      quote: 'Al principio no creía que vibrara, pero sí avisa cada vez que me encorvo. Es muy discreto, lo uso bajo la camisa en la oficina.'
-    },
-    {
-      videoUrl:  'vidalud-demo.mp4',
-      posterUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&q=80',
-      name: 'Laura Quintero', city: 'Cali', stars: 5,
-      quote: 'El envío fue gratis y pagué al recibir. El material es suave y no molesta. Mi postura ha mejorado muchísimo.'
-    }
+  @ViewChildren('testiVideo') videos!: QueryList<ElementRef<HTMLVideoElement>>;
+
+  readonly testimonials = [
+    { src: 'videos/testimonio-1.mp4', poster: 'videos/testimonio-1.jpg', quote: 'Volví a dormir la noche entera.' },
+    { src: 'videos/testimonio-2.mp4', poster: 'videos/testimonio-2.jpg', quote: 'Adiós a la fatiga y el estrés.' },
   ];
 
-  // 🔥 Variables para controlar si el texto fue copiado
-  copiedPhone = false;
-  copiedEmail = false;
+  /** Comentarios de clientes que ya estaban en la página anterior. */
+  readonly reviews = [
+    { name: 'Carlos M.', city: 'Bogotá', icon: 'bi-moon-stars', tag: 'Descanso',
+      text: 'Llevo 15 días tomándolo y mi sueño cambió por completo. Ya no me despierto en la madrugada. 100% recomendado.' },
+    { name: 'Fernando T.', city: 'Barranquilla', icon: 'bi-shield-check', tag: 'Pago seguro',
+      text: 'Tenía dudas de comprar por internet, pero pagar al recibir me dio mucha tranquilidad. El frasco llegó sellado.' },
+    { name: 'Laura S.', city: 'Bucaramanga', icon: 'bi-truck', tag: 'Envío rápido',
+      text: 'Increíble la rapidez. Lo pedí un martes y el jueves ya estaba en mi casa. Excelente servicio por WhatsApp.' },
+  ];
 
-  // 🔥 Función que se encarga de copiar al portapapeles y mostrar el mensaje temporal
-  copyText(text: string, type: 'phone' | 'email') {
-    navigator.clipboard.writeText(text).then(() => {
-      if (type === 'phone') {
-        this.copiedPhone = true;
-        // Regresar a la normalidad después de 2.5 segundos
-        setTimeout(() => this.copiedPhone = false, 2500); 
-      } else {
-        this.copiedEmail = true;
-        setTimeout(() => this.copiedEmail = false, 2500);
+  readonly faqs = [
+    {
+      q: '¿Cómo pago mi pedido?',
+      a: 'Pagas <strong>en efectivo cuando el pedido llega a tu casa</strong>. No necesitas tarjeta ni pagar nada por adelantado.',
+    },
+    {
+      q: '¿Hacen envíos a toda Colombia? ¿Cuánto cuesta?',
+      a: 'Sí, enviamos a toda Colombia y el <strong>envío es gratis</strong>. Después de confirmar tu pedido por WhatsApp te compartimos el número de guía para que lo sigas.',
+    },
+    {
+      q: '¿Qué recibo en cada promo 2x1?',
+      a: 'Cada promo trae <strong>2 frascos de Magnesium Complex (90 cápsulas cada uno, 180 en total)</strong> por $99.900. Puedes pedir varias promos en el mismo pedido.',
+    },
+    {
+      q: '¿Para qué sirve el súper magnesio?',
+      a: 'El magnesio contribuye a disminuir el cansancio y la fatiga, al funcionamiento normal de los músculos y del sistema nervioso. Por eso muchas personas lo toman para descansar mejor, tener más energía y aliviar calambres.',
+    },
+    {
+      q: '¿Qué tiene de especial el glicinato de magnesio?',
+      a: 'Es una de las formas de magnesio más suaves con el estómago y la más usada para relajarse y dormir mejor. Magnesium Complex lo combina con malato, taurato, citrato, orotato, aspartato, carbonato y óxido de magnesio.',
+    },
+    {
+      q: '¿Cómo se toma?',
+      a: 'La porción de la etiqueta es de <strong>2 cápsulas vegetales</strong>, que aportan 1.000 mg de magnesio. Cada frasco trae 45 porciones. En la guía gratuita te contamos a qué hora tomarlo según lo que buscas.',
+    },
+    {
+      q: '¿Cualquier persona lo puede tomar?',
+      a: 'Es un suplemento dietario para adultos. Si estás embarazada, en lactancia, tienes una condición renal o tomas medicamentos, consulta primero con tu médico.',
+    },
+  ];
+
+  play(i: number) {
+    this.videos.forEach((ref, idx) => {
+      const v = ref.nativeElement;
+      if (idx === i) {
+        v.controls = true;
+        v.muted = false;
+        safePlay(v, () => { v.muted = true; safePlay(v); });
+      } else if (!v.paused) {
+        v.pause();
       }
-    }).catch(err => {
-      console.error('No se pudo copiar el texto: ', err);
     });
-  }
-
-  stars(n: number): number[] { return Array(n).fill(0); }
-
-  play(event: Event): void {
-    const btn = event.currentTarget as HTMLElement;
-    const card = btn.closest('.test-card');
-    
-    if (card) {
-      const video = card.querySelector('video') as HTMLVideoElement;
-      if (video) {
-        video.muted = false; 
-        video.play();
-        card.classList.add('playing');
-        video.controls = true; 
-      }
-    }
+    this.playing.set(i);
   }
 }

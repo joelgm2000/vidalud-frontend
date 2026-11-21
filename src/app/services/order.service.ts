@@ -19,13 +19,20 @@ export interface OrderPayload {
   size?: string;
 }
 
+/**
+ * En el PC (localhost) los pedidos van al servidor local de pruebas, para no mezclar
+ * pruebas con ventas reales ni enviar compras falsas a Meta. En vidalud.com van a Render.
+ */
+const API_BASE = typeof location !== 'undefined' && location.hostname === 'localhost'
+  ? 'http://localhost:3000'
+  : 'https://vidalud.onrender.com';
+
 @Injectable({ providedIn: 'root' })
 export class OrderService {
 
   async processOrder(order: OrderPayload): Promise<string> {
     try {
-      // 🚀 EL CAMBIO MAESTRO: Apuntando a tu servidor oficial en la nube
-      const response = await fetch('https://vidalud.onrender.com/api/orders', {
+      const response = await fetch(`${API_BASE}/api/orders`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(order)

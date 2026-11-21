@@ -1,174 +1,173 @@
-<div class="container-fluid px-0">
-  <div class="row g-0">
-    
-    <div class="col-lg-7 p-4 bg-white">
-      <h4 class="fw-bold mb-3">Datos de Envío</h4>
-      
-      <form [formGroup]="form">
+@if (cart.isOpen()) {
+<div class="overlay" (click)="close()"></div>
+<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="checkout-title"
+     #panel tabindex="-1" (keydown.escape)="close()">
 
-        <div class="row g-2 mb-3">
-          <div class="col-6">
-            <div class="form-floating">
-              <input type="text" class="form-control" id="firstName" formControlName="firstName" placeholder="Nombres" [class.is-invalid]="isInvalid('firstName')">
-              <label for="firstName">Nombres</label>
-            </div>
-          </div>
-          <div class="col-6">
-            <div class="form-floating">
-              <input type="text" class="form-control" id="lastName" formControlName="lastName" placeholder="Apellidos" [class.is-invalid]="isInvalid('lastName')">
-              <label for="lastName">Apellidos</label>
-            </div>
-          </div>
+  <header class="sheet-head">
+    <div>
+      <span class="eyebrow">Pago contra entrega</span>
+      <h2 id="checkout-title">
+        @switch (step()) {
+          @case ('form') { Finaliza tu pedido }
+          @case ('review') { Revisa tus datos }
+          @case ('done') { ¡Pedido recibido! }
+        }
+      </h2>
+    </div>
+    <button type="button" class="close-btn" (click)="close()" aria-label="Cerrar"><i class="bi bi-x-lg"></i></button>
+  </header>
+
+  @if (step() !== 'done') {
+    <ol class="progress-steps" aria-label="Pasos">
+      <li [class.active]="step() === 'form'" [class.done]="step() === 'review'"><span>1</span> Tus datos</li>
+      <li [class.active]="step() === 'review'"><span>2</span> Confirmar</li>
+    </ol>
+  }
+
+  <!-- Paso 1: datos -->
+  @if (step() === 'form') {
+    <form [formGroup]="form" (ngSubmit)="toReview()" novalidate>
+
+      <fieldset class="block">
+        <legend>Tu promo</legend>
+        <div class="mini-bundles">
+          @for (b of bundles; track b.qty) {
+            <button type="button" class="mini-bundle" [class.selected]="cart.qty() === b.qty"
+                    [attr.aria-pressed]="cart.qty() === b.qty" (click)="cart.setQty(b.qty)">
+              <strong>{{ b.bottles }} frascos</strong>
+              <span>{{ cop(b.qty * unit) }}</span>
+            </button>
+          }
         </div>
+      </fieldset>
 
-        <div class="row g-2 mb-3">
-          <div class="col-6">
-            <div class="form-floating">
-              <input type="tel" class="form-control" id="phone" formControlName="phone" placeholder="Celular" [class.is-invalid]="isInvalid('phone')">
-              <label for="phone">Celular</label>
-            </div>
-          </div>
-          <div class="col-6">
-            <div class="form-floating">
-              <input type="email" class="form-control" id="email" formControlName="email" placeholder="Email" [class.is-invalid]="isInvalid('email')">
-              <label for="email">Email</label>
-            </div>
-          </div>
-        </div>
-
-        <div class="form-floating mb-2">
-          <input type="email" class="form-control" id="emailConfirm" formControlName="emailConfirm" placeholder="Confirmar Email" [class.is-invalid]="isInvalid('emailConfirm') || form.hasError('emailMismatch')">
-          <label for="emailConfirm">Confirmar Email</label>
-          <div class="invalid-feedback" *ngIf="form.hasError('emailMismatch')">
-            Los emails no coinciden
-          </div>
-        </div>
-
-        <div class="mb-4 px-1">
-          <span class="text-danger d-block fw-bold" style="font-size: 0.85rem; line-height: 1.25;">
-            <i class="bi bi-exclamation-circle-fill me-1"></i> ¡Asegúrate de escribir correctamente tu celular y correo para poder contactarte con la confirmación de tu pedido!
-          </span>
-        </div>
-
-        <div class="row g-2 mb-3">
-          <div class="col-6">
-            <div class="form-floating">
-              <select class="form-select" formControlName="department" id="dep" [class.is-invalid]="isInvalid('department')">
-                <option value="">Departamento</option>
-                <option *ngFor="let d of departments" [value]="d">{{ d }}</option>
-              </select>
-              <label for="dep">Departamento</label>
-            </div>
-          </div>
-          <div class="col-6">
-            <div class="form-floating">
-              <select class="form-select" formControlName="city" id="city" [class.is-invalid]="isInvalid('city')">
-                <option value="">Ciudad</option>
-                <option *ngFor="let c of availableCities" [value]="c">{{ c }}</option>
-              </select>
-              <label for="city">Ciudad</label>
-            </div>
-          </div>
-        </div>
-
-        <div class="form-floating mb-3">
-          <input type="text" class="form-control" id="address" formControlName="address" placeholder="Dirección" [class.is-invalid]="isInvalid('address')">
-          <label for="address">Dirección (Ej: CRA 17 # 11-25, Apto 301)</label>
-        </div>
-
-        <div class="form-floating mb-4">
-          <input type="text" class="form-control" id="neighborhood" formControlName="neighborhood" placeholder="Barrio" [class.is-invalid]="isInvalid('neighborhood')">
-          <label for="neighborhood">Barrio</label>
-        </div>
-
-        <h5 class="fw-bold mb-3">Tu Pedido</h5>
-        <div class="d-flex justify-content-between align-items-center mb-4 p-3 border rounded bg-light">
-          <div>
-            <div class="fw-bold">Cantidad de Promos (2x1)</div>
-            <small class="text-muted">Aprovecha el envío gratis</small>
-          </div>
-          <div class="input-group" style="width: 120px;">
-            <button type="button" class="btn btn-outline-secondary" (click)="changeQuantity(-1)">-</button>
-            <input type="text" class="form-control text-center fw-bold bg-white" [value]="quantity" readonly>
-            <button type="button" class="btn btn-outline-secondary" (click)="changeQuantity(1)">+</button>
-          </div>
-        </div>
-
-        <h5 class="fw-bold mb-3">Método de Pago</h5>
-        <div class="d-grid gap-2 mb-4">
-          <label class="payment-option d-flex align-items-center p-3 border rounded cursor-pointer selected-pay">
-            <input type="radio" class="form-check-input me-3" value="cod" checked disabled>
-            <div>
-              <div class="fw-bold">Pago Contra Entrega</div>
-              <small class="text-muted">Pagas en efectivo al recibir.</small>
-            </div>
-            <i class="bi bi-cash ms-auto fs-4 text-success"></i>
+      <fieldset class="block">
+        <legend>¿Quién recibe?</legend>
+        <div class="row2">
+          <label class="field" [class.has-error]="invalid('firstName')">
+            <span>Nombres</span>
+            <input type="text" formControlName="firstName" autocomplete="given-name" placeholder="Ej: Laura">
+            @if (invalid('firstName')) { <small>Escribe tu nombre</small> }
+          </label>
+          <label class="field" [class.has-error]="invalid('lastName')">
+            <span>Apellidos</span>
+            <input type="text" formControlName="lastName" autocomplete="family-name" placeholder="Ej: Pérez">
+            @if (invalid('lastName')) { <small>Escribe tu apellido</small> }
           </label>
         </div>
+        <label class="field" [class.has-error]="invalid('phone')">
+          <span>Celular (WhatsApp)</span>
+          <input type="tel" inputmode="numeric" formControlName="phone" autocomplete="tel-national"
+                 placeholder="300 123 4567" maxlength="14" (blur)="normalizePhone()">
+          @if (invalid('phone')) { <small>Escribe un celular de 10 dígitos que empiece por 3</small> }
+          @else { <em class="hint">Por aquí te confirmamos el pedido.</em> }
+        </label>
+        <label class="field" [class.has-error]="invalid('email')">
+          <span>Correo <i>(opcional)</i></span>
+          <input type="email" formControlName="email" autocomplete="email" placeholder="tucorreo@ejemplo.com">
+          @if (invalid('email')) { <small>Revisa el correo</small> }
+          @else { <em class="hint">Para enviarte la confirmación del pedido.</em> }
+        </label>
+      </fieldset>
 
-        <button type="button" class="btn btn-success w-100 py-3 fw-bold" (click)="openConfirmModal()">
-          FINALIZAR PEDIDO
-        </button>
-
-      </form>
-    </div>
-
-    <div class="col-lg-5 bg-light p-4 border-start">
-      <h5 class="fw-bold mb-3">Resumen</h5>
-      <div class="d-flex gap-3 align-items-center mb-3">
-        <img src="IMAGEN_PRODUCTO_3.jpeg" width="60" class="rounded border bg-white">
-        <div>
-          <div class="fw-bold">Magnesium Complex <span class="badge bg-danger ms-1">PROMO 2x1</span></div>
-          <small class="text-muted">Recibes 2 frascos <span class="badge bg-secondary ms-1">x{{ quantity }}</span></small>
+      <fieldset class="block">
+        <legend>¿A dónde lo enviamos?</legend>
+        <div class="row2">
+          <label class="field" [class.has-error]="invalid('department')">
+            <span>Departamento</span>
+            <select formControlName="department" autocomplete="address-level1">
+              <option value="">Elige…</option>
+              @for (d of departments; track d) { <option [value]="d">{{ d }}</option> }
+            </select>
+            @if (invalid('department')) { <small>Elige el departamento</small> }
+          </label>
+          <label class="field" [class.has-error]="invalid('city')">
+            <span>Ciudad</span>
+            <select formControlName="city" autocomplete="address-level2">
+              <option value="">{{ cities().length ? 'Elige…' : 'Primero el departamento' }}</option>
+              @for (c of cities(); track c) { <option [value]="c">{{ c }}</option> }
+            </select>
+            @if (invalid('city')) { <small>Elige la ciudad</small> }
+          </label>
         </div>
-        <div class="ms-auto fw-bold text-dark">${{ 99900 | number:'1.0-0' }}</div>
-      </div>
-      <hr>
-      <div class="d-flex justify-content-between fw-bold fs-5">
-        <span>Total</span>
-        <span class="text-success">${{ total | number:'1.0-0' }}</span>
-      </div>
-      <div class="text-end mt-1">
-        <small class="text-muted">Envío gratis incluido</small>
-      </div>
-    </div>
+        <label class="field" [class.has-error]="invalid('address')">
+          <span>Dirección</span>
+          <input type="text" formControlName="address" autocomplete="street-address" placeholder="Ej: Cra 17 # 11-25, apto 301">
+          @if (invalid('address')) { <small>Escribe la dirección completa</small> }
+        </label>
+        <div class="row2">
+          <label class="field" [class.has-error]="invalid('neighborhood')">
+            <span>Barrio</span>
+            <input type="text" formControlName="neighborhood" placeholder="Ej: El Prado">
+            @if (invalid('neighborhood')) { <small>Escribe el barrio</small> }
+          </label>
+          <label class="field">
+            <span>Indicaciones <i>(opcional)</i></span>
+            <input type="text" formControlName="notes" placeholder="Ej: casa esquinera, portón negro">
+          </label>
+        </div>
+      </fieldset>
 
-  </div>
+      <div class="summary">
+        <div class="summary-line"><span>{{ cart.bottles() }} frascos de Magnesium Complex</span><span>{{ cop(cart.total()) }}</span></div>
+        <div class="summary-line muted"><span>Envío</span><span class="free">Gratis</span></div>
+        <div class="summary-line muted"><span>Ahorras</span><span>{{ cop(savings()) }}</span></div>
+        <div class="summary-total"><span>Total a pagar al recibir</span><strong>{{ cop(cart.total()) }}</strong></div>
+      </div>
+
+      <label class="consent" [class.has-error]="invalid('accept')">
+        <input type="checkbox" formControlName="accept">
+        <span>
+          Acepto los <a href="#" (click)="$event.preventDefault(); legal.show('terms')">términos y condiciones</a>
+          y autorizo el <a href="#" (click)="$event.preventDefault(); legal.show('privacy')">tratamiento de mis datos personales</a>.
+          Entiendo que es un suplemento dietario y no un medicamento.
+        </span>
+      </label>
+      @if (invalid('accept')) { <small class="consent-error">Para continuar debes aceptar los términos y la política de datos.</small> }
+
+      @if (error()) { <p class="form-error" role="alert"><i class="bi bi-exclamation-circle"></i> {{ error() }}</p> }
+
+      <button type="submit" class="btn-green btn-lg w-100">Continuar <i class="bi bi-arrow-right"></i></button>
+      <p class="secure"><i class="bi bi-shield-lock"></i> No pagas nada ahora. Pagas en efectivo cuando recibas.</p>
+    </form>
+  }
+
+  <!-- Paso 2: revisar -->
+  @if (step() === 'review') {
+    @let v = form.getRawValue();
+    <div class="review">
+      <p class="review-intro">Confirma que tu celular y dirección estén bien escritos para que tu pedido llegue sin problemas.</p>
+      <dl>
+        <div><dt>Recibe</dt><dd>{{ v.firstName }} {{ v.lastName }}</dd></div>
+        <div><dt>Celular</dt><dd>{{ v.phone }}</dd></div>
+        @if (v.email) { <div><dt>Correo</dt><dd>{{ v.email }}</dd></div> }
+        <div><dt>Dirección</dt><dd>{{ v.address }}, {{ v.neighborhood }}</dd></div>
+        <div><dt>Ciudad</dt><dd>{{ v.city }}, {{ v.department }}</dd></div>
+        @if (v.notes) { <div><dt>Indicaciones</dt><dd>{{ v.notes }}</dd></div> }
+        <div><dt>Pedido</dt><dd>{{ cart.bottles() }} frascos · <strong>{{ cop(cart.total()) }}</strong> al recibir</dd></div>
+      </dl>
+
+      @if (error()) { <p class="form-error" role="alert"><i class="bi bi-exclamation-circle"></i> {{ error() }}</p> }
+
+      <button type="button" class="btn-gold btn-lg w-100" (click)="submit()" [disabled]="loading()">
+        @if (loading()) { <span class="vl-spinner dark"></span> Enviando pedido… }
+        @else { Confirmar pedido <i class="bi bi-check2"></i> }
+      </button>
+      <button type="button" class="btn-ghost w-100 mt-2" (click)="step.set('form')" [disabled]="loading()">
+        <i class="bi bi-pencil"></i> Corregir datos
+      </button>
+    </div>
+  }
+
+  <!-- Paso 3: listo -->
+  @if (step() === 'done') {
+    <div class="done">
+      <span class="done-icon"><i class="bi bi-check-lg"></i></span>
+      @if (orderId()) { <p class="done-id">Pedido #{{ orderId() }}</p> }
+      <p>Te vamos a llevar a WhatsApp para confirmar tu pedido. Si no se abre solo, toca el botón:</p>
+      <a class="btn-green btn-lg w-100" [href]="waConfirmUrl()"><i class="bi bi-whatsapp"></i> Confirmar por WhatsApp</a>
+      <p class="secure"><i class="bi bi-truck"></i> Recibirás tu número de guía en las próximas 24 a 48 horas.</p>
+    </div>
+  }
 </div>
-
-<div class="modal fade" id="confirmDataModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content border-0 rounded-4 shadow">
-      <div class="modal-header border-0 pb-0">
-        <h5 class="modal-title fw-bold text-dark"><i class="bi bi-check-circle-fill text-success me-2"></i>Verifica tus datos</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body p-4">
-        <p class="text-muted mb-3" style="font-size: 0.9rem;">
-          Confirma que tu dirección y celular estén correctos para asegurar la entrega:
-        </p>
-        
-        <div class="bg-light p-3 rounded-3 mb-3" style="font-size: 0.9rem;">
-          <div class="mb-2"><strong>Nombre:</strong> <span class="text-muted">{{ form.get('firstName')?.value }} {{ form.get('lastName')?.value }}</span></div>
-          <div class="mb-2"><strong>Celular:</strong> <span class="text-muted">{{ form.get('phone')?.value }}</span></div>
-          <div class="mb-2"><strong>Email:</strong> <span class="text-muted">{{ form.get('email')?.value }}</span></div>
-          <div class="mb-2"><strong>Dirección:</strong> <span class="text-muted">{{ form.get('address')?.value }}</span></div>
-          <div class="mb-2"><strong>Barrio:</strong> <span class="text-muted">{{ form.get('neighborhood')?.value }}</span></div>
-          <div><strong>Ciudad:</strong> <span class="text-muted">{{ form.get('city')?.value }}, {{ form.get('department')?.value }}</span></div>
-        </div>
-
-        <div class="alert alert-warning border-warning border-start border-4 bg-warning bg-opacity-10 py-2 px-3 mb-4 text-dark shadow-sm" style="font-size: 0.85rem; line-height: 1.4;">
-          <strong>¡Atención!</strong> En el próximo día lo estaremos contactando por correo electrónico o por llamada o vía WhatsApp, <strong>así que confirme que haya escrito bien esta información.</strong>
-        </div>
-
-        <div class="d-flex gap-2">
-          <button type="button" class="btn btn-outline-secondary w-50 fw-bold" data-bs-dismiss="modal">Corregir</button>
-          <button type="button" class="btn btn-success w-50 fw-bold shadow-sm" (click)="submitOrder()" [disabled]="loading()">
-            <span *ngIf="loading()">Procesando...</span>
-            <span *ngIf="!loading()">Sí, es correcto</span>
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+}
