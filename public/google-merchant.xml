@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Archivo de productos para Google Merchant Center. Google lo lee cada 24 horas.
+     Si cambia el precio en la tienda, cámbialo también aquí (debe coincidir con la página). -->
+<rss xmlns:g="http://base.google.com/ns/1.0" version="2.0">
+  <channel>
+    <title>Vidalud</title>
+    <link>https://www.vidalud.com/</link>
+    <description>Tienda oficial Vidalud – Magnesium Complex con envío gratis y pago contra entrega en Colombia</description>
+    <item>
+      <g:id>VIDALUD-MAGCOMPLEX-X2</g:id>
+      <g:title>Magnesium Complex 8 en 1 con Glicinato de Magnesio – Pack x2 frascos (180 cápsulas)</g:title>
+      <g:description>Suplemento dietario con 8 formas de magnesio: óxido, glicinato, malato, taurato, citrato, carbonato, aspartato y orotato. 1.000 mg de magnesio por porción de 2 cápsulas vegetales. El pack trae 2 frascos de 90 cápsulas (45 porciones cada uno). Envío gratis y pago contra entrega en toda Colombia. Este producto no es un medicamento.</g:description>
+      <g:link>https://www.vidalud.com/</g:link>
+      <g:image_link>https://www.vidalud.com/producto-google.jpg</g:image_link>
+      <g:additional_image_link>https://www.vidalud.com/videos/producto.jpg</g:additional_image_link>
+      <g:availability>in_stock</g:availability>
+      <g:price>99900 COP</g:price>
+      <g:condition>new</g:condition>
+      <g:brand>Toplux</g:brand>
+      <g:identifier_exists>no</g:identifier_exists>
+      <g:multipack>2</g:multipack>
+      <g:google_product_category>525</g:google_product_category>
+      <g:product_type>Suplementos &gt; Magnesio</g:product_type>
+      <g:adult>no</g:adult>
+    </item>
+  </channel>
+</rss>
