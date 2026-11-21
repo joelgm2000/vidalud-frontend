@@ -86,8 +86,10 @@ export const LEGAL: Record<LegalDoc, LegalText> = {
           'Puedes ejercer el derecho de retracto previsto en el artículo 47 de la Ley 1480 de 2011 dentro de los 5 días ' +
           'hábiles siguientes a la entrega, siempre que el producto esté sellado y sin abrir. Por razones de higiene y ' +
           'seguridad no se reciben frascos abiertos.',
+          'En caso de retracto, el cliente envía el producto de vuelta por transportadora y asume el costo de ese envío, ' +
+          'como lo prevé la ley. El dinero se devuelve una vez recibamos y revisemos el producto.',
           'Si el producto llega con el sello roto, dañado o vencido, escríbenos dentro de los 5 días hábiles siguientes ' +
-          'a la entrega con fotos del producto y lo cambiamos sin costo.',
+          'a la entrega con fotos del producto y lo cambiamos sin costo para ti, incluido el envío.',
           `Para retracto, garantía, peticiones, quejas o reclamos escríbenos a ${CONTACT}.`,
         ],
       },
