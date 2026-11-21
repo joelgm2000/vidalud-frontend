@@ -17,10 +17,10 @@
 .footer-legal { border-top: 1px solid rgba(255, 255, 255, .1); margin-top: 40px; padding-top: 20px; font-size: .82rem; color: #8fa596; }
 .footer-legal p { margin: 0 0 8px; max-width: 820px; }
 .legal-links { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 18px; max-width: none !important; }
-.legal-links button {
+.legal-links a {
   background: none; border: 0; padding: 0; cursor: pointer; font: inherit; color: #dfe8e2; text-decoration: underline;
 }
-.legal-links button:hover { color: #fff; }
+.legal-links a:hover { color: #fff; }
 
 .sticky-buy {
   position: fixed; left: 12px; right: 12px; bottom: 12px; z-index: 60;

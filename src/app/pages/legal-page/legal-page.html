@@ -1,0 +1,17 @@
+<section class="legal-page">
+  <div class="wrap legal-wrap">
+    <a routerLink="/" class="back"><i class="bi bi-arrow-left"></i> Volver a la tienda</a>
+    <h1>{{ doc.title }}</h1>
+    <p class="updated">{{ doc.updated }}</p>
+    <p class="intro">{{ doc.intro }}</p>
+    @for (s of doc.sections; track s.title) {
+      <section [id]="anchor(s.title)">
+        <h2>{{ s.title }}</h2>
+        @for (p of s.paragraphs; track $index) { <p>{{ p }}</p> }
+      </section>
+    }
+    <p class="other">
+      Consulta también: <a [routerLink]="otherPath">{{ other === 'terms' ? 'Términos y condiciones' : 'Política de tratamiento de datos personales' }}</a>
+    </p>
+  </div>
+</section>

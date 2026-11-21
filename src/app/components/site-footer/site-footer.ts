@@ -1,10 +1,12 @@
 import { Component, HostListener, computed, inject, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { CartService, UNIT_PRICE, WHATSAPP_NUMBER, cop } from '../../services/cart.service';
 import { LegalService } from '../../services/legal.service';
 
 @Component({
   selector: 'app-site-footer',
   standalone: true,
+  imports: [RouterLink],
   templateUrl: './site-footer.html',
   styleUrl: './site-footer.css'
 })

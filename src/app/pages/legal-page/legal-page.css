@@ -1,0 +1,10 @@
+.legal-page { padding: 40px 0 64px; }
+.legal-wrap { max-width: 780px; }
+.back { display: inline-flex; gap: 8px; align-items: center; text-decoration: none; font-weight: 600; margin-bottom: 18px; }
+h1 { font-size: clamp(2rem, 4vw, 2.6rem); margin: 0 0 6px; }
+.updated { color: var(--vl-muted); font-size: .9rem; margin-bottom: 22px; }
+.intro { font-size: 1.05rem; color: var(--vl-ink); font-weight: 500; line-height: 1.6; }
+section section { scroll-margin-top: 90px; }
+h2 { font-family: var(--vl-sans); font-size: 1.15rem; font-weight: 700; margin: 28px 0 8px; }
+p { color: var(--vl-muted); line-height: 1.7; }
+.other { margin-top: 36px; padding-top: 20px; border-top: 1px solid var(--vl-line); }

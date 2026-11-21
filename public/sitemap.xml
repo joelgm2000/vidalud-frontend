@@ -17,4 +17,16 @@
       <video:content_loc>https://www.vidalud.com/videos/producto.mp4</video:content_loc>
     </video:video>
   </url>
+  <url>
+    <loc>https://www.vidalud.com/terminos</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://www.vidalud.com/privacidad</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
 </urlset>
