@@ -1,13 +1,14 @@
 import { ApplicationConfig } from '@angular/core';
 import { provideRouter }     from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withFetch } from '@angular/common/http';
+import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { routes }            from './app.routes';
 
-// Firebase se inicializa directamente en firebase.config.ts
-// No necesitamos @angular/fire para Angular 21
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    provideHttpClient(),
+    provideHttpClient(withFetch()),
+    // La página se genera ya armada (mejor para Google) y el navegador la reutiliza.
+    provideClientHydration(withEventReplay()),
   ]
 };

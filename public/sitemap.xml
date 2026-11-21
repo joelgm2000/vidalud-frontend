@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+  <url>
+    <loc>https://www.vidalud.com/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <image:image><image:loc>https://www.vidalud.com/videos/producto.jpg</image:loc></image:image>
+    <image:image><image:loc>https://www.vidalud.com/IMAGEN_PRODUCTO_7.jpeg</image:loc></image:image>
+    <image:image><image:loc>https://www.vidalud.com/eduardo-guerra.jpg</image:loc></image:image>
+    <video:video>
+      <video:thumbnail_loc>https://www.vidalud.com/videos/producto.jpg</video:thumbnail_loc>
+      <video:title>Magnesium Complex 8 en 1: así es el producto</video:title>
+      <video:description>Frasco de Magnesium Complex con 8 formas de magnesio, incluido glicinato, en cápsulas vegetales.</video:description>
+      <video:content_loc>https://www.vidalud.com/videos/producto.mp4</video:content_loc>
+    </video:video>
+  </url>
+</urlset>

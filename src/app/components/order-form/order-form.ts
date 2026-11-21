@@ -1,4 +1,5 @@
 import { Component, ElementRef, ViewChild, computed, effect, inject, signal } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { OrderService, OrderPayload } from '../../services/order.service';
 import { BUNDLES, CartService, UNIT_PRICE, LIST_PRICE, WHATSAPP_NUMBER, cop } from '../../services/cart.service';
@@ -21,6 +22,7 @@ export class OrderForm {
   private orderSvc = inject(OrderService);
   readonly cart = inject(CartService);
   readonly legal = inject(LegalService);
+  private doc = inject(DOCUMENT);
 
   @ViewChild('panel') panel?: ElementRef<HTMLElement>;
 
@@ -60,7 +62,7 @@ export class OrderForm {
     // Bloquea el scroll del fondo y lleva el foco al panel al abrir.
     effect(() => {
       const open = this.cart.isOpen();
-      document.body.classList.toggle('vl-lock', open);
+      this.doc.body?.classList.toggle('vl-lock', open);
       if (open) setTimeout(() => this.panel?.nativeElement.focus(), 30);
     });
   }
