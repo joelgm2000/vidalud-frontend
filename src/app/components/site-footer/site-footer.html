@@ -53,11 +53,14 @@
     <strong>{{ total() }}</strong>
     <span>{{ cart.bottles() }} {{ cart.bottles() === 1 ? 'frasco' : 'frascos' }} · pagas al recibir</span>
   </div>
-  <button type="button" class="btn-gold" (click)="cart.checkout()">Pedir ahora</button>
+  <div class="sticky-actions">
+    <a class="sticky-wa" [href]="waUrl" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp"><i class="bi bi-whatsapp"></i></a>
+    <button type="button" class="btn-gold" (click)="cart.checkout()">Pedir ahora</button>
+  </div>
 </div>
 
 <!-- Botón flotante de WhatsApp: resolver dudas sin salir de la página -->
-<a class="wa-float" [class.raised]="showSticky() && !cart.isOpen()" [href]="waUrl" target="_blank" rel="noopener"
+<a class="wa-float" [class.show]="showSticky() && !cart.isOpen() && !waBlocked()" [href]="waUrl" target="_blank" rel="noopener"
    aria-label="¿Dudas? Escríbenos por WhatsApp">
   <i class="bi bi-whatsapp"></i><span>¿Dudas?</span>
 </a>
