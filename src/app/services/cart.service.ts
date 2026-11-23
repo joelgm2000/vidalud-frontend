@@ -22,23 +22,28 @@ export interface Bundle {
   price: number;
   /** ID del producto en Dropi (va a la columna «ID DE PRODUCTO» de la hoja). */
   dropiId: string;
+  /**
+   * Cantidad que se manda a Dropi (columna CANTIDAD). OJO: 2078012 es un PACK x2
+   * («X2 Magnesium Complex 90 Capsulas»), así que ahí cada unidad = 2 frascos.
+   */
+  dropiQty: number;
   tag?: string;
   image: string;
 }
 
 export const BUNDLES: Bundle[] = [
   {
-    id: 'single', title: '1 frasco', bottles: 1, price: SINGLE_PRICE, dropiId: '1993404',
+    id: 'single', title: '1 frasco', bottles: 1, price: SINGLE_PRICE, dropiId: '1993404', dropiQty: 1,
     product: 'Magnesium Complex Vital World', detail: '100 cápsulas blandas · registro INVIMA',
     image: 'vital-world-1-frasco.jpg',
   },
   {
-    id: 'promo', title: 'Promo 2x1', bottles: 2, price: UNIT_PRICE, dropiId: '2078012',
+    id: 'promo', title: 'Promo 2x1', bottles: 2, price: UNIT_PRICE, dropiId: '2078012', dropiQty: 1,
     product: 'Magnesium Complex Toplux', detail: '2 frascos · 180 cápsulas', tag: 'Mejor precio',
     image: 'producto-google.jpg',
   },
   {
-    id: 'promo2', title: '2 promos 2x1', bottles: 4, price: UNIT_PRICE * 2, dropiId: '2078012',
+    id: 'promo2', title: '2 promos 2x1', bottles: 4, price: UNIT_PRICE * 2, dropiId: '2078012', dropiQty: 2,
     product: 'Magnesium Complex Toplux', detail: '4 frascos · 360 cápsulas', tag: 'Para compartir',
     image: 'producto-google.jpg',
   },

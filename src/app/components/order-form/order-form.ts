@@ -123,7 +123,7 @@ export class OrderForm {
       productName:   label,
       productId:     b.dropiId,
       size:          'UNICA',
-      quantity:      b.bottles,
+      quantity:      b.dropiQty,  // packs para el x2 de Dropi; frascos para el Vital World
       total:         this.cart.total(),
       paymentMethod: 'cod',
       shipping:      0,
