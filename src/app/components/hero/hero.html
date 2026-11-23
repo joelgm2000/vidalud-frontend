@@ -9,7 +9,7 @@
         <strong>2 frascos por {{ cop(promoPrice) }}</strong>
       </p>
       <p class="mo-sub"><i class="bi bi-cash-coin"></i> Pagas al recibir · <i class="bi bi-truck"></i> Envío gratis</p>
-      <button type="button" class="mo-cta" (click)="goToOptions()">Ver opciones y pedir <i class="bi bi-arrow-down"></i></button>
+      <button type="button" class="mo-cta attn" (click)="goToOptions()">Ver opciones y pedir <i class="bi bi-arrow-down"></i></button>
     </div>
 
     <!-- Galería -->
@@ -81,7 +81,7 @@
         }
       </div>
 
-      <button type="button" class="btn-gold btn-lg buy-cta" (click)="cart.checkout()">
+      <button type="button" class="btn-gold btn-lg buy-cta attn" (click)="cart.checkout()">
         Pedir {{ cart.bottles() === 1 ? '1 frasco' : cart.bottles() + ' frascos' }} · pagas al recibir <i class="bi bi-arrow-right"></i>
       </button>
       <p class="eta"><i class="bi bi-clock-history"></i> Recíbelo en 2 a 6 días hábiles · Sin anticipos ni tarjeta</p>

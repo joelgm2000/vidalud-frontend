@@ -104,3 +104,29 @@ img, video { max-width: 100%; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* ── Botones que invitan a comprar ──
+   Un «latido» suave cada pocos segundos y un brillo que cruza el botón.
+   Se desactiva solo si la persona pidió menos movimiento (regla de arriba). */
+.attn { position: relative; overflow: hidden; animation: vl-nudge 3.2s ease-in-out infinite; }
+.attn::after {
+  content: ''; position: absolute; top: 0; bottom: 0; left: -60%; width: 40%; z-index: 1;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .38), transparent);
+  transform: skewX(-18deg); animation: vl-shine 3.2s ease-in-out infinite; pointer-events: none;
+}
+.attn:hover { animation-play-state: paused; }
+@keyframes vl-nudge {
+  0%, 70%, 100% { transform: scale(1); }
+  78% { transform: scale(1.035); }
+  86% { transform: scale(.99); }
+  93% { transform: scale(1.02); }
+}
+@keyframes vl-shine {
+  0%, 55% { left: -60%; }
+  85%, 100% { left: 130%; }
+}
+/* La flecha empuja hacia donde lleva el botón. */
+.attn i.bi-arrow-right, .attn i.bi-arrow-down { display: inline-block; animation: vl-arrow 3.2s ease-in-out infinite; }
+.attn i.bi-arrow-down { animation-name: vl-arrow-down; }
+@keyframes vl-arrow { 0%, 70%, 100% { transform: none; } 80% { transform: translateX(4px); } 90% { transform: translateX(0); } }
+@keyframes vl-arrow-down { 0%, 70%, 100% { transform: none; } 80% { transform: translateY(4px); } 90% { transform: translateY(0); } }
