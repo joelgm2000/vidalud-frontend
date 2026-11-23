@@ -23,5 +23,20 @@
       <g:product_type>Suplementos &gt; Magnesio</g:product_type>
       <g:adult>no</g:adult>
     </item>
+    <item>
+      <g:id>VIDALUD-VITALWORLD-X1</g:id>
+      <g:title>Magnesium Complex Vital World 1.000 mg – 100 cápsulas blandas</g:title>
+      <g:description>Suplemento dietario con 8 formas de magnesio: óxido, cloruro, bisglicinato, lactato, malato, glicerofosfato, carbonato y citrato. 1.000 mg de magnesio por porción de 2 cápsulas blandas de gelatina con relleno líquido. Frasco de 100 cápsulas. Sin lactosa ni gluten. Envío gratis y pago contra entrega en toda Colombia. Este producto no es un medicamento.</g:description>
+      <g:link>https://www.vidalud.com/</g:link>
+      <g:image_link>https://www.vidalud.com/vital-world-1-frasco.jpg</g:image_link>
+      <g:availability>in_stock</g:availability>
+      <g:price>70000 COP</g:price>
+      <g:condition>new</g:condition>
+      <g:brand>Vital World</g:brand>
+      <g:identifier_exists>no</g:identifier_exists>
+      <g:google_product_category>525</g:google_product_category>
+      <g:product_type>Suplementos &gt; Magnesio</g:product_type>
+      <g:adult>no</g:adult>
+    </item>
   </channel>
 </rss>

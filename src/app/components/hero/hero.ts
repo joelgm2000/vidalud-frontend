@@ -1,5 +1,5 @@
 import { Component, ElementRef, ViewChild, computed, inject, signal } from '@angular/core';
-import { BUNDLES, CAPSULES_PER_BOTTLE, CartService, LIST_PRICE, UNIT_PRICE, cop, safePlay } from '../../services/cart.service';
+import { BUNDLES, CartService, UNIT_PRICE, cop, perBottle, safePlay, savingsVsSingle } from '../../services/cart.service';
 
 interface MediaItem {
   type: 'video' | 'image';
@@ -16,10 +16,10 @@ interface MediaItem {
 export class Hero {
   readonly cart = inject(CartService);
   readonly bundles = BUNDLES;
-  readonly unit = UNIT_PRICE;
-  readonly list = LIST_PRICE;
-  readonly capsules = CAPSULES_PER_BOTTLE;
   readonly cop = cop;
+  readonly promoPrice = UNIT_PRICE;
+  readonly perBottle = perBottle;
+  readonly savingsVsSingle = savingsVsSingle;
 
   videoRef?: ElementRef<HTMLVideoElement>;
 
@@ -43,6 +43,13 @@ export class Hero {
   readonly index = signal(0);
   readonly current = computed(() => this.media[this.index()]);
   readonly muted = signal(true);
+
+  /** Baja a las opciones de compra dejando espacio para el encabezado fijo. */
+  goToOptions() {
+    const el = document.getElementById('elige');
+    if (!el) return;
+    window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 76, behavior: 'smooth' });
+  }
 
   select(i: number) {
     this.index.set(i);

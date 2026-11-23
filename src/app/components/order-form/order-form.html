@@ -29,13 +29,15 @@
     <form [formGroup]="form" (ngSubmit)="toReview()" novalidate>
 
       <fieldset class="block">
-        <legend>Tu promo</legend>
+        <legend>Tu pedido</legend>
         <div class="mini-bundles">
-          @for (b of bundles; track b.qty) {
-            <button type="button" class="mini-bundle" [class.selected]="cart.qty() === b.qty"
-                    [attr.aria-pressed]="cart.qty() === b.qty" (click)="cart.setQty(b.qty)">
-              <strong>{{ b.bottles }} frascos</strong>
-              <span>{{ cop(b.qty * unit) }}</span>
+          @for (b of bundles; track b.id) {
+            <button type="button" class="mini-bundle" [class.selected]="cart.selected() === b.id" [class.best]="b.id === 'promo'"
+                    [attr.aria-pressed]="cart.selected() === b.id" (click)="cart.select(b.id)">
+              @if (b.id === 'promo') { <em class="mini-tag">Mejor precio</em> }
+              <strong>{{ b.bottles }} {{ b.bottles === 1 ? 'frasco' : 'frascos' }}</strong>
+              <span>{{ cop(b.price) }}</span>
+              <small>{{ cop(perBottle(b)) }} c/u</small>
             </button>
           }
         </div>
@@ -109,9 +111,16 @@
       </fieldset>
 
       <div class="summary">
-        <div class="summary-line"><span>{{ cart.bottles() }} frascos de Magnesium Complex</span><span>{{ cop(cart.total()) }}</span></div>
+        <div class="summary-line"><span>@if (cart.bottles() > 1) {{{ cart.bundle().title }} · }{{ cart.bottles() }} {{ cart.bottles() === 1 ? 'frasco' : 'frascos' }}<br><small class="muted-small">{{ cart.bundle().product }}</small></span><span>{{ cop(cart.total()) }}</span></div>
         <div class="summary-line muted"><span>Envío</span><span class="free">Gratis</span></div>
-        <div class="summary-line muted"><span>Ahorras</span><span>{{ cop(savings()) }}</span></div>
+        @if (savings() > 0) {
+          <div class="summary-line muted"><span>Ahorras frente a frascos sueltos</span><span class="free">{{ cop(savings()) }}</span></div>
+        } @else {
+          <div class="summary-line upsell">
+            <span><i class="bi bi-lightbulb"></i> Con la <strong>Promo 2x1</strong> te llevas 2 frascos por {{ cop(99900) }} ({{ cop(49950) }} c/u).</span>
+            <button type="button" class="link-btn" (click)="cart.select('promo')">Cambiar a 2x1</button>
+          </div>
+        }
         <div class="summary-total"><span>Total a pagar al recibir</span><strong>{{ cop(cart.total()) }}</strong></div>
       </div>
 
@@ -144,7 +153,7 @@
         <div><dt>Dirección</dt><dd>{{ v.address }}, {{ v.neighborhood }}</dd></div>
         <div><dt>Ciudad</dt><dd>{{ v.city }}, {{ v.department }}</dd></div>
         @if (v.notes) { <div><dt>Indicaciones</dt><dd>{{ v.notes }}</dd></div> }
-        <div><dt>Pedido</dt><dd>{{ cart.bottles() }} frascos · <strong>{{ cop(cart.total()) }}</strong> al recibir</dd></div>
+        <div><dt>Pedido</dt><dd>@if (cart.bottles() > 1) {{{ cart.bundle().title }} · }{{ cart.bottles() }} {{ cart.bottles() === 1 ? 'frasco' : 'frascos' }} · <strong>{{ cop(cart.total()) }}</strong> al recibir</dd></div>
       </dl>
 
       @if (error()) { <p class="form-error" role="alert"><i class="bi bi-exclamation-circle"></i> {{ error() }}</p> }

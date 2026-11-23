@@ -10,6 +10,8 @@ export interface OrderPayload {
   city: string;
   address: string;        // dirección + barrio combinados
   notes?: string;
+  /** Opción elegida, legible (p. ej. «Promo 2x1 (2 frascos) - Magnesium Complex Toplux»). */
+  productName?: string;
   productId: string;
   quantity: number;
   total: number;

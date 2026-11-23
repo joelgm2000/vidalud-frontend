@@ -102,3 +102,18 @@
 @media (max-width: 480px) {
   .benefits { grid-template-columns: 1fr; }
 }
+
+/* ── ¿Te identificas? ── */
+.pains { background: var(--vl-green-100); }
+.pain-list { list-style: none; padding: 0; margin: 0 auto; max-width: 760px; display: grid; gap: 10px; }
+.pain-list li {
+  display: flex; align-items: center; gap: 14px; background: #fff; border-radius: 14px;
+  padding: 14px 18px; font-weight: 600; color: var(--vl-green-900); box-shadow: var(--vl-shadow-sm);
+}
+.pain-icon {
+  flex-shrink: 0; width: 38px; height: 38px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
+  background: var(--vl-gold-100); color: var(--vl-gold-600); font-size: 1.15rem;
+}
+.pain-bridge { max-width: 680px; margin: 22px auto 0; text-align: center; color: var(--vl-muted); line-height: 1.6; }
+.pain-cta { text-align: center; margin-top: 20px; }
+@media (max-width: 575px) { .pain-cta .btn-gold { width: 100%; } }

@@ -2,11 +2,9 @@ import { Component, ElementRef, ViewChild, computed, effect, inject, signal } fr
 import { DOCUMENT } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { OrderService, OrderPayload } from '../../services/order.service';
-import { BUNDLES, CartService, UNIT_PRICE, LIST_PRICE, WHATSAPP_NUMBER, cop } from '../../services/cart.service';
+import { BUNDLES, CartService, DEFAULT_BUNDLE, WHATSAPP_NUMBER, cop, perBottle, savingsVsSingle } from '../../services/cart.service';
 import { DEPARTMENTS } from '../../data/colombia';
 import { LegalService } from '../../services/legal.service';
-
-const SKU_PRODUCT = '2078012';
 
 type Step = 'form' | 'review' | 'done';
 
@@ -28,8 +26,7 @@ export class OrderForm {
 
   readonly cop = cop;
   readonly bundles = BUNDLES;
-  readonly unit = UNIT_PRICE;
-  readonly list = LIST_PRICE;
+  readonly perBottle = perBottle;
   readonly departments = Object.keys(DEPARTMENTS).sort();
 
   readonly step = signal<Step>('form');
@@ -38,7 +35,7 @@ export class OrderForm {
   readonly orderId = signal('');
   readonly cities = signal<string[]>([]);
   readonly waConfirmUrl = signal('');
-  readonly savings = computed(() => this.cart.qty() * (LIST_PRICE - UNIT_PRICE));
+  readonly savings = computed(() => savingsVsSingle(this.cart.bundle()));
 
   readonly form = this.fb.nonNullable.group({
     firstName:    ['', [Validators.required, Validators.minLength(2)]],
@@ -109,6 +106,9 @@ export class OrderForm {
     this.loading.set(true);
     this.error.set('');
     const v = this.form.getRawValue();
+    const b = this.cart.bundle();
+    // La opción elegida queda escrita en NOTA para que el equipo la vea en la hoja de Dropi.
+    const label = b.bottles === 1 ? `1 frasco - ${b.product}` : `${b.title} (${b.bottles} frascos) - ${b.product}`;
 
     const payload: OrderPayload = {
       fullName:      `${v.firstName} ${v.lastName}`.trim(),
@@ -119,10 +119,11 @@ export class OrderForm {
       department:    v.department,
       city:          v.city,
       address:       `${v.address.trim()}, ${v.neighborhood.trim()}`,
-      notes:         v.notes.trim(),
-      productId:     SKU_PRODUCT,
+      notes:         [`[${label}]`, v.notes.trim()].filter(Boolean).join(' '),
+      productName:   label,
+      productId:     b.dropiId,
       size:          'UNICA',
-      quantity:      this.cart.qty(),
+      quantity:      b.bottles,
       total:         this.cart.total(),
       paymentMethod: 'cod',
       shipping:      0,
@@ -134,12 +135,12 @@ export class OrderForm {
       this.orderId.set(id || '');
       const msg = `¡Hola! Acabo de hacer un pedido de Magnesium Complex.\n\n` +
         `*Pedido:* #${id || 'pendiente'}\n*A nombre de:* ${payload.fullName}\n` +
-        `*Ciudad:* ${payload.city}\n*Cantidad:* ${this.cart.bottles()} frascos\n*Total:* ${cop(payload.total)}\n\n` +
+        `*Ciudad:* ${payload.city}\n*Producto:* ${label}\n*Total:* ${cop(payload.total)}\n\n` +
         `Escribo para confirmar mi pedido con pago contra entrega.`;
       this.waConfirmUrl.set(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`);
       this.step.set('done');
       this.form.reset();
-      this.cart.setQty(1);
+      this.cart.select(DEFAULT_BUNDLE);
       // Igual que antes: llevamos al cliente a WhatsApp para confirmar, con unos segundos para leer.
       this.redirectTimer = setTimeout(() => { window.location.href = this.waConfirmUrl(); }, 4000);
     } catch {

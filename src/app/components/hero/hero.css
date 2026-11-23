@@ -59,9 +59,11 @@
   background: var(--vl-green-100); color: var(--vl-green-700); font-size: .9rem; margin-top: 1px;
 }
 
-.bundles { display: grid; gap: 10px; margin-bottom: 18px; }
+.choose-label { font-weight: 700; color: var(--vl-green-900); margin: 0 0 8px; }
+.bundles { display: grid; gap: 12px; margin-bottom: 14px; }
 .bundle {
-  display: grid; grid-template-columns: auto 1fr auto; grid-template-areas: 'radio info price' 'radio tag price';
+  position: relative;
+  display: grid; grid-template-columns: auto 1fr auto; grid-template-areas: 'radio info price';
   align-items: center; column-gap: 14px; text-align: left;
   width: 100%; padding: 12px 18px; border-radius: 16px; cursor: pointer;
   background: var(--vl-white); border: 1.5px solid var(--vl-line);
@@ -82,17 +84,28 @@
 .b-info { grid-area: info; display: flex; flex-direction: column; }
 .b-info strong { font-size: 1.02rem; color: var(--vl-green-900); }
 .b-info small { color: var(--vl-muted); font-size: .86rem; }
-.b-tag {
-  grid-area: tag; justify-self: start; margin-top: 4px;
-  background: var(--vl-gold-100); color: var(--vl-gold-600);
-  font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
-  padding: 3px 9px; border-radius: 999px;
+.b-info .b-product { font-size: .76rem; opacity: .85; }
+/* La opción recomendada destaca con borde dorado y cinta, aunque no esté seleccionada. */
+.bundle.best { border-color: var(--vl-gold); padding-top: 18px; }
+.b-ribbon {
+  position: absolute; top: -11px; left: 16px;
+  background: var(--vl-gold); color: var(--vl-green-900);
+  font-size: .7rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+  padding: 3px 10px; border-radius: 999px; box-shadow: 0 4px 10px rgba(201, 162, 74, .35);
 }
-.b-price { grid-area: price; display: flex; flex-direction: column; align-items: flex-end; }
-.b-price strong { font-family: var(--vl-serif); font-size: 1.35rem; color: var(--vl-green-900); }
-.b-price s { color: var(--vl-muted); font-size: .85rem; }
+.bundle:not(.best) .b-ribbon { background: var(--vl-gold-100); color: var(--vl-gold-600); box-shadow: none; }
+.b-price { grid-area: price; display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+.b-price strong { font-family: var(--vl-serif); font-size: 1.35rem; color: var(--vl-green-900); line-height: 1.1; }
+.b-price small { color: var(--vl-muted); font-size: .78rem; }
+.b-price small.good { color: var(--vl-green-500); font-weight: 700; }
+.b-save {
+  background: #e7f4ec; color: #1d6b48; font-size: .72rem; font-weight: 700;
+  padding: 2px 8px; border-radius: 999px; margin-top: 2px;
+}
 
 .buy-cta { width: 100%; }
+.eta { text-align: center; color: var(--vl-muted); font-size: .86rem; margin: 10px 0 0; }
+.eta i { color: var(--vl-green-700); }
 
 .trust-row {
   list-style: none; padding: 0; margin: 22px 0 0;
@@ -121,4 +134,30 @@
   .trust-row li { flex-direction: row; align-items: center; gap: 12px; }
   .bundle { padding: 14px; }
   .b-price strong { font-size: 1.2rem; }
+}
+
+/* ── Oferta arriba en celular ── */
+.mobile-offer { display: none; }
+@media (max-width: 991px) {
+  .mobile-offer {
+    display: block; text-align: center; margin-bottom: 4px;
+  }
+  .mo-title { font-family: var(--vl-serif); font-weight: 600; font-size: 1.55rem; color: var(--vl-green-900); margin: 0 0 6px; line-height: 1.1; }
+  .mo-title em { color: var(--vl-green-500); }
+  .mo-price { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 0 0 4px; flex-wrap: wrap; }
+  .mo-price strong { font-size: 1.15rem; color: var(--vl-green-900); }
+  .mo-badge {
+    background: var(--vl-gold); color: var(--vl-green-900); font-size: .7rem; font-weight: 800;
+    letter-spacing: .06em; text-transform: uppercase; padding: 3px 9px; border-radius: 999px;
+  }
+  .mo-sub { color: var(--vl-muted); font-size: .86rem; margin: 0 0 10px; }
+  .mo-sub i { color: var(--vl-green-700); }
+  .mo-cta {
+    border: 0; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 6px; text-decoration: none;
+    background: var(--vl-green-800); color: #fff; font-weight: 700; font-size: .92rem;
+    padding: 10px 18px; border-radius: 999px;
+  }
+  .mo-cta:hover { color: #fff; }
+  #elige { scroll-margin-top: 80px; }
 }

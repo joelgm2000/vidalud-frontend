@@ -10,6 +10,14 @@ import { CartService } from '../../services/cart.service';
 export class Info {
   readonly cart = inject(CartService);
 
+  readonly pains = [
+    { icon: 'bi-moon', text: 'Te cuesta dormir o te despiertas varias veces en la noche' },
+    { icon: 'bi-lightning', text: 'Amaneces cansado y te falta energía durante el día' },
+    { icon: 'bi-person-walking', text: 'Te dan calambres o sientes los músculos tensos' },
+    { icon: 'bi-emoji-frown', text: 'Vives con estrés y te cuesta relajarte' },
+    { icon: 'bi-bicycle', text: 'Entrenas y quieres recuperarte mejor' },
+  ];
+
   readonly benefits = [
     { icon: 'bi-moon-stars', title: 'Mejor descanso', text: 'El glicinato es la forma de magnesio más usada para relajarse al final del día y dormir mejor.' },
     { icon: 'bi-lightning-charge', title: 'Más energía', text: 'El magnesio contribuye a disminuir el cansancio y la fatiga del día a día.' },

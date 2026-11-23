@@ -1,6 +1,17 @@
 <section class="hero">
   <div class="wrap hero-grid">
 
+    <!-- Celular: la oferta se ve antes del video, sin tener que bajar -->
+    <div class="mobile-offer">
+      <p class="mo-title">Magnesium Complex <em>8 en 1</em></p>
+      <p class="mo-price">
+        <span class="mo-badge">Promo 2x1</span>
+        <strong>2 frascos por {{ cop(promoPrice) }}</strong>
+      </p>
+      <p class="mo-sub"><i class="bi bi-cash-coin"></i> Pagas al recibir · <i class="bi bi-truck"></i> Envío gratis</p>
+      <button type="button" class="mo-cta" (click)="goToOptions()">Ver opciones y pedir <i class="bi bi-arrow-down"></i></button>
+    </div>
+
     <!-- Galería -->
     <div class="gallery">
       <div class="gallery-main">
@@ -43,32 +54,37 @@
       </p>
 
       <ul class="checks">
-        <li><i class="bi bi-check2"></i> 1.000 mg de magnesio por porción, en cápsulas vegetales</li>
-        <li><i class="bi bi-check2"></i> Con glicinato, malato, taurato y citrato, entre otras</li>        <li><i class="bi bi-check2"></i> Envío gratis y pago contra entrega en toda Colombia</li>
+        <li><i class="bi bi-check2"></i> 1.000 mg de magnesio por porción de 2 cápsulas</li>
+        <li><i class="bi bi-check2"></i> Con glicinato (bisglicinato), malato y citrato, entre otras</li>
+        <li><i class="bi bi-check2"></i> Envío gratis y pago contra entrega en toda Colombia</li>
       </ul>
 
-      <div class="bundles" role="radiogroup" aria-label="Elige tu promo">
-        @for (b of bundles; track b.qty) {
-          <button type="button" class="bundle" role="radio"
-                  [class.selected]="cart.qty() === b.qty" [attr.aria-checked]="cart.qty() === b.qty"
-                  (click)="cart.setQty(b.qty)">
+      <p class="choose-label" id="elige">Elige cuántos frascos quieres:</p>
+      <div class="bundles" role="radiogroup" aria-label="Elige cuántos frascos quieres">
+        @for (b of bundles; track b.id) {
+          <button type="button" class="bundle" role="radio" [class.best]="b.id === 'promo'"
+                  [class.selected]="cart.selected() === b.id" [attr.aria-checked]="cart.selected() === b.id"
+                  (click)="cart.select(b.id)">
+            @if (b.tag) { <span class="b-ribbon">{{ b.tag }}</span> }
             <span class="radio" aria-hidden="true"></span>
             <span class="b-info">
               <strong>{{ b.title }}</strong>
-              <small>{{ b.bottles }} frascos · {{ b.bottles * capsules }} cápsulas</small>
+              <small>{{ b.detail }}</small>
+              <small class="b-product">{{ b.product }}</small>
             </span>
-            @if (b.tag) { <span class="b-tag">{{ b.tag }}</span> }
             <span class="b-price">
-              <strong>{{ cop(b.qty * unit) }}</strong>
-              <s>{{ cop(b.qty * list) }}</s>
+              <strong>{{ cop(b.price) }}</strong>
+              <small [class.good]="b.bottles > 1">{{ cop(perBottle(b)) }} por frasco</small>
+              @if (savingsVsSingle(b) > 0) { <span class="b-save">Ahorras {{ cop(savingsVsSingle(b)) }}</span> }
             </span>
           </button>
         }
       </div>
 
       <button type="button" class="btn-gold btn-lg buy-cta" (click)="cart.checkout()">
-        Pedir ahora · pagas al recibir <i class="bi bi-arrow-right"></i>
+        Pedir {{ cart.bottles() === 1 ? '1 frasco' : cart.bottles() + ' frascos' }} · pagas al recibir <i class="bi bi-arrow-right"></i>
       </button>
+      <p class="eta"><i class="bi bi-clock-history"></i> Recíbelo en 2 a 6 días hábiles · Sin anticipos ni tarjeta</p>
 
       <ul class="trust-row">
         <li><i class="bi bi-cash-coin"></i><span><strong>Pagas al recibir</strong> en efectivo, en tu puerta</span></li>

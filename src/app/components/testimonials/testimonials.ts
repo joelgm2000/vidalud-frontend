@@ -39,7 +39,11 @@ export class Testimonials {
     },
     {
       q: '¿Qué recibo en cada promo 2x1?',
-      a: 'Cada promo trae <strong>2 frascos de Magnesium Complex (90 cápsulas cada uno, 180 en total)</strong> por $99.900. Puedes pedir varias promos en el mismo pedido.',
+      a: 'Cada promo trae <strong>2 frascos de Magnesium Complex (90 cápsulas cada uno, 180 en total)</strong> por $99.900, es decir $49.950 por frasco. Puedes pedir 2 promos en el mismo pedido.',
+    },
+    {
+      q: '¿Puedo comprar un solo frasco?',
+      a: 'Sí. El frasco suelto cuesta <strong>$70.000</strong> y es el <strong>Magnesium Complex de Vital World</strong>: 100 cápsulas blandas de gelatina con relleno líquido, 1.000 mg de magnesio por porción y 8 formas de magnesio (óxido, cloruro, bisglicinato, lactato, malato, glicerofosfato, carbonato y citrato), con registro INVIMA. La promo 2x1 es otra marca (Toplux) y sale más económica por frasco.',
     },
     {
       q: '¿Para qué sirve el súper magnesio?',

@@ -2,25 +2,63 @@ import { Injectable, computed, signal } from '@angular/core';
 
 declare const fbq: ((...args: unknown[]) => void) | undefined;
 
-/** Precio de una promo 2x1 (2 frascos). */
+/** Precio de la promo 2x1 (2 frascos). */
 export const UNIT_PRICE = 99900;
-/** Precio de referencia de 2 frascos sin promo. */
-export const LIST_PRICE = 160000;
+/** Precio de un frasco suelto (Vital World). */
+export const SINGLE_PRICE = 70000;
 export const CAPSULES_PER_BOTTLE = 90;
 export const WHATSAPP_NUMBER = '573114370406';
 
+export type BundleId = 'single' | 'promo' | 'promo2';
+
 export interface Bundle {
-  qty: number;
+  id: BundleId;
   title: string;
+  /** Detalle corto que se muestra debajo del título. */
+  detail: string;
+  /** Marca/presentación: se muestra para no confundir productos distintos. */
+  product: string;
   bottles: number;
+  price: number;
+  /** ID del producto en Dropi (va a la columna «ID DE PRODUCTO» de la hoja). */
+  dropiId: string;
   tag?: string;
+  image: string;
 }
 
 export const BUNDLES: Bundle[] = [
-  { qty: 1, title: '1 promo 2x1', bottles: 2 },
-  { qty: 2, title: '2 promos 2x1', bottles: 4, tag: 'Para compartir' },
-  { qty: 3, title: '3 promos 2x1', bottles: 6, tag: 'Para la familia' },
+  {
+    id: 'single', title: '1 frasco', bottles: 1, price: SINGLE_PRICE, dropiId: '1993404',
+    product: 'Magnesium Complex Vital World', detail: '100 cápsulas blandas · registro INVIMA',
+    image: 'vital-world-1-frasco.jpg',
+  },
+  {
+    id: 'promo', title: 'Promo 2x1', bottles: 2, price: UNIT_PRICE, dropiId: '2078012',
+    product: 'Magnesium Complex Toplux', detail: '2 frascos · 180 cápsulas', tag: 'Mejor precio',
+    image: 'producto-google.jpg',
+  },
+  {
+    id: 'promo2', title: '2 promos 2x1', bottles: 4, price: UNIT_PRICE * 2, dropiId: '2078012',
+    product: 'Magnesium Complex Toplux', detail: '4 frascos · 360 cápsulas', tag: 'Para compartir',
+    image: 'producto-google.jpg',
+  },
 ];
+
+export const DEFAULT_BUNDLE: BundleId = 'promo';
+
+export function bundleById(id: BundleId): Bundle {
+  return BUNDLES.find(b => b.id === id) ?? BUNDLES[1];
+}
+
+/** Precio por frasco de una opción. */
+export function perBottle(b: Bundle): number {
+  return Math.round(b.price / b.bottles);
+}
+
+/** Ahorro frente a comprar la misma cantidad de frascos sueltos. */
+export function savingsVsSingle(b: Bundle): number {
+  return Math.max(0, b.bottles * SINGLE_PRICE - b.price);
+}
 
 export function cop(value: number): string {
   return '$' + Math.round(value).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
@@ -28,17 +66,18 @@ export function cop(value: number): string {
 
 @Injectable({ providedIn: 'root' })
 export class CartService {
-  readonly qty = signal(1);
+  readonly selected = signal<BundleId>(DEFAULT_BUNDLE);
   readonly isOpen = signal(false);
-  readonly total = computed(() => this.qty() * UNIT_PRICE);
-  readonly bottles = computed(() => this.qty() * 2);
+  readonly bundle = computed(() => bundleById(this.selected()));
+  readonly total = computed(() => this.bundle().price);
+  readonly bottles = computed(() => this.bundle().bottles);
 
-  setQty(qty: number) {
-    if (qty >= 1 && qty <= 10) this.qty.set(qty);
+  select(id: BundleId) {
+    this.selected.set(id);
   }
 
-  checkout(qty?: number) {
-    if (qty) this.setQty(qty);
+  checkout(id?: BundleId) {
+    if (id) this.select(id);
     this.isOpen.set(true);
     try {
       if (typeof fbq === 'function') {

@@ -1,3 +1,27 @@
+<!-- Problemas: el lector se reconoce y entiende para qué es el producto -->
+<section class="section-tight pains">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">¿Te identificas?</span>
+      <h2>Si te pasa alguna de estas cosas, <em>esto es para ti</em></h2>
+    </div>
+    <ul class="pain-list">
+      @for (p of pains; track p.text) {
+        <li><span class="pain-icon"><i class="bi" [class]="p.icon"></i></span><span>{{ p.text }}</span></li>
+      }
+    </ul>
+    <p class="pain-bridge">
+      El magnesio contribuye al funcionamiento normal de los músculos y del sistema nervioso, y a disminuir el
+      cansancio y la fatiga. Es uno de los minerales que más se agotan con el estrés y el ejercicio.
+    </p>
+    <div class="pain-cta">
+      <button type="button" class="btn-gold btn-lg" (click)="cart.checkout()">
+        Quiero mi promo 2x1 · pago al recibir <i class="bi bi-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+</section>
+
 <!-- Cómo comprar -->
 <section id="como-comprar" class="section-tight steps-band">
   <div class="wrap">
